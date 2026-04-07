@@ -12,18 +12,6 @@ use App\Actions\Roles\{CreateRoleAction, UpdateRoleAction, DeleteRoleAction, Syn
 use App\Repositories\Interfaces\{RoleRepositoryInterface, PermissionRepositoryInterface};
 use App\Exceptions\Users\{UsersException, RoleNotFoundException};
 
-// ═══════════════════════════════════════════════════════════
-// RoleController
-//
-// Endpoints:
-//   GET    /roles             → index  (listar roles de la empresa)
-//   POST   /roles             → store  (crear rol custom)
-//   GET    /roles/{role}      → show   (detalle con permisos)
-//   PUT    /roles/{role}      → update (actualizar datos del rol)
-//   DELETE /roles/{role}      → destroy (eliminar rol)
-//   PUT    /roles/{role}/permissions → syncPermissions
-// ═══════════════════════════════════════════════════════════
-
 class RoleController extends Controller
 {
     public function __construct(

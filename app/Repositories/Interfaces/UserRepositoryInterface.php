@@ -8,35 +8,6 @@ use App\Models\User;
 
 // ═══════════════════════════════════════════════════════════
 // UserRepositoryInterface
-//
-// CONCEPTO: ¿Para qué sirve una Interface en el Repository?
-// ═══════════════════════════════════════════════════════════
-//
-// Esta interface define EL CONTRATO — qué métodos debe tener
-// cualquier implementación del repositorio de usuarios.
-//
-// Hoy tenemos UserRepository que usa Eloquent.
-// Mañana podría existir UserApiRepository que consulta una API.
-// El resto del código (Actions, Services) no sabe cuál usa.
-// Solo sabe que puede llamar findByEmail(), create(), etc.
-//
-// BENEFICIOS CONCRETOS:
-//
-// 1. TESTABILIDAD: En los tests podés usar un MockUserRepository
-//    que devuelve datos falsos sin tocar la DB real.
-//
-// 2. FLEXIBILIDAD: Si cambiás de Eloquent a Doctrine, solo
-//    escribís una nueva clase que implementa esta interface.
-//    Las Actions no cambian ni una línea.
-//
-// 3. DOCUMENTACIÓN VIVA: La interface documenta qué operaciones
-//    existen sobre usuarios. Es el índice del repositorio.
-//
-// REGISTRO EN EL SERVICE CONTAINER:
-//   En RepositoryServiceProvider hacés el binding:
-//   $this->app->bind(UserRepositoryInterface::class, UserRepository::class)
-//   Así el IoC Container de Laravel inyecta el Eloquent repo automáticamente.
-// ═══════════════════════════════════════════════════════════
 
 interface UserRepositoryInterface
 {

@@ -9,8 +9,6 @@ class SyncPermissionsRequest extends \App\Http\Requests\ApiFormRequest
     public function rules(): array
     {
         return [
-            // Enviamos el array completo de IDs de permisos que debe tener el rol
-            // Un array vacío [] es válido — significa "quitar todos los permisos"
             'permission_ids'   => ['present', 'array'],
             'permission_ids.*' => ['uuid', 'exists:permissions,id'],
         ];

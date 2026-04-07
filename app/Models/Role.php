@@ -9,20 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// ═══════════════════════════════════════════════════════════
-// Role Model
-//
-// CONCEPTO: Roles globales vs roles de empresa
-// ═══════════════════════════════════════════════════════════
-//
-// company_id = NULL  → rol global del sistema (ej: super_admin)
-// company_id = UUID  → rol de una empresa específica
-//
-// Los roles del sistema (is_system = true) no pueden
-// ser modificados ni borrados por admins de empresa.
-// Solo el super_admin puede tocarlos.
-// ═══════════════════════════════════════════════════════════
-
 class Role extends Model
 {
     use HasUuids, SoftDeletes;
@@ -138,10 +124,6 @@ class Role extends Model
 
     // ─── INVALIDAR CACHÉ DE TODOS LOS USUARIOS DEL ROL ───
     //
-    // Cuando cambian los permisos de un rol, hay que invalidar
-    // el caché de permisos de TODOS los usuarios que tienen ese rol.
-    // Esto es costoso si el rol tiene miles de usuarios, pero
-    // el cambio de permisos es una operación poco frecuente.
     public function invalidateUsersPermissionsCache(): void
     {
         $this->users()

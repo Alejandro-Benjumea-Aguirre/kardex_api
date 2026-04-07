@@ -21,28 +21,13 @@ class PermissionRepository implements PermissionRepositoryInterface
             ->when(
                 $companyId,
                 fn($q) => $q->forCompany($companyId),
-                fn($q) => $q->whereNull('company_id') // solo globales si no hay company
+                fn($q) => $q->whereNull('company_id')
             )
             ->orderBy('module')
             ->orderBy('sort_order')
             ->get();
     }
 
-    // ─── CONCEPTO: groupBy() en colecciones Laravel ───────
-    //
-    // Al mostrar permisos en la UI de "editar rol",
-    // necesitamos agruparlos por módulo:
-    //
-    //   products: [read, create, update, delete, import, export]
-    //   sales:    [read, create, void, refund, discount]
-    //   ...
-    //
-    // $collection->groupBy('module') devuelve una Collection
-    // donde cada clave es el módulo y el valor es otra Collection
-    // con los permisos de ese módulo.
-    //
-    // Luego ->toArray() la convierte en array PHP puro.
-    // Esto es lo que va al Resource y finalmente al JSON.
     public function allGroupedByModule(?string $companyId = null): array
     {
         return $this->allActive($companyId)

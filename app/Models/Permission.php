@@ -8,33 +8,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
 
-// ═══════════════════════════════════════════════════════════
-// Permission Model
-//
-// CONCEPTO: Convención de nombres módulo:acción
-// ═══════════════════════════════════════════════════════════
-//
-// Todos los permisos del sistema siguen la convención:
-//   {módulo}:{acción}
-//
-// Módulos y sus permisos:
-//   products:   read, create, update, delete, import, export
-//   sales:      read, create, void, refund, discount
-//   inventory:  read, manage, transfer, adjust
-//   purchases:  read, create, approve, receive
-//   users:      read, create, update, delete, assign-roles
-//   roles:      read, create, update, delete
-//   reports:    view, export
-//   settings:   manage
-//   system:     access, manage   ← solo super_admin
-// ═══════════════════════════════════════════════════════════
-
 class Permission extends Model
 {
     use HasUuids;
 
-    // Los permisos del sistema raramente cambian
-    // No necesitan SoftDeletes — si se borra, se borra
     protected $fillable = [
         'company_id',
         'name',

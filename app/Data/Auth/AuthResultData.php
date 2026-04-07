@@ -8,14 +8,6 @@ use App\Models\User;
 use Spatie\LaravelData\Data;
 
 // ─── AuthResultData ─────────────────────────────────────────
-//
-// DTO de salida del LoginAction. Reemplaza el array plano
-// que devolvía antes, dando tipos explícitos a cada campo.
-//
-// El $user viene cargado con ['company', 'roles'] desde la Action.
-// El $refresh_token se pone en cookie HttpOnly en el Controller
-// y NO se incluye en el body de la respuesta.
-
 class AuthResultData extends Data
 {
     public function __construct(

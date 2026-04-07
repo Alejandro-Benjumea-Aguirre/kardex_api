@@ -20,21 +20,6 @@ use App\Actions\Users\{
 use App\Repositories\Interfaces\UserRepositoryExtendedInterface;
 use App\Exceptions\Users\UsersException;
 
-// ═══════════════════════════════════════════════════════════
-// UserController
-//
-// Endpoints:
-//   GET    /users            → index  (listar con filtros y paginación)
-//   POST   /users            → store  (crear usuario)
-//   GET    /users/{user}     → show   (detalle del usuario)
-//   PUT    /users/{user}     → update (actualizar datos)
-//   DELETE /users/{user}     → destroy (desactivar)
-//   POST   /users/{user}/activate      → activar
-//   PUT    /users/{user}/password      → cambiar password
-//   POST   /users/{user}/roles         → asignar rol
-//   DELETE /users/{user}/roles/{role}  → revocar rol
-// ═══════════════════════════════════════════════════════════
-
 class UserController extends Controller
 {
     public function __construct(
@@ -54,18 +39,6 @@ class UserController extends Controller
             perPage: (int) $request->input('per_page', 20),
         );
 
-        // ─── CONCEPTO: ResourceCollection con paginación ─────
-        //
-        // UserResource::collection() convierte cada elemento
-        // de la paginación en un UserResource.
-        //
-        // El resultado incluye automáticamente los metadatos
-        // de paginación de Laravel:
-        //   {
-        //     "data": [...],
-        //     "links": { "first": "...", "next": "...", ... },
-        //     "meta":  { "current_page": 1, "total": 50, ... }
-        //   }
         return response()->json([
             'success' => true,
             'data'    => UserResource::collection($users),

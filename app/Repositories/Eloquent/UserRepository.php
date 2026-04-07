@@ -9,50 +9,17 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryExtendedInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-// ═══════════════════════════════════════════════════════════
-// UserRepository — Implementación con Eloquent
-//
-// CONCEPTO: ¿Por qué centralizar las queries aquí?
-// ═══════════════════════════════════════════════════════════
-//
-// ERROR COMÚN: Escribir las queries directamente en el Controller:
-//
-//   // En AuthController:
-//   $user = User::where('email', $email)
-//               ->where('is_active', true)
-//               ->first();
-//
-//   // En ProfileController:
-//   $user = User::where('email', $email)
-//               ->where('is_active', true)
-//               ->first();
-//
-// Misma query duplicada en 5 lugares. Si necesitás agregar
-// ->where('is_email_verified', true), la buscás en 5 archivos.
-//
-// CON REPOSITORY:
-//   $user = $this->userRepo->findByEmail($email);
-//
-// Una sola implementación, usada en todos lados.
-// El cambio se hace en un solo lugar.
-// ═══════════════════════════════════════════════════════════
-
 class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedInterface
 {
     // ─── BÚSQUEDAS ────────────────────────────────────────
 
     public function findById(string $id): ?User
     {
-        // Cargamos relaciones completas para que el objeto sea útil
-        // tanto en auth como en la gestión de usuarios/roles.
         return User::with(['company', 'roles.permissions', 'branches'])->find($id);
     }
 
     public function findByEmail(string $email): ?User
     {
-        // Normalizamos el email a minúsculas aquí, en el repositorio.
-        // Así no importa si el usuario escribe MARIA@GMAIL.COM o maria@gmail.com
-        // — siempre encontramos el mismo registro.
         return User::where('email', strtolower(trim($email)))->first();
     }
 
@@ -65,9 +32,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function findByPasswordResetToken(string $token): ?User
     {
-        // Laravel tiene su propio sistema de password reset (PasswordBroker)
-        // que guarda tokens en la tabla password_reset_tokens.
-        // Aquí hacemos la query directamente para mayor control.
         $reset = \DB::table('password_reset_tokens')
             ->where('token', hash('sha256', $token))
             ->where('created_at', '>', now()->subHour())
@@ -84,16 +48,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function paginate(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        // ─── CONCEPTO: Query Builder dinámico con when() ──────
-        //
-        // when($condición, $callback) agrega la condición al query
-        // SOLO si $condición es truthy. Evita el antipatrón:
-        //
-        //   $query = User::query();
-        //   if ($filters['search']) { $query->where(...); }
-        //   if ($filters['role'])   { $query->where(...); }
-        //
-        // Con when() es mucho más limpio y encadenable.
         return User::with(['company', 'roles'])
             ->when(
                 $filters['company_id'] ?? null,
@@ -106,8 +60,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
                           ->orWhere('last_name',  'ilike', "%{$v}%")
                           ->orWhere('email',      'ilike', "%{$v}%")
                 )
-                // ILIKE en PostgreSQL = LIKE pero case-insensitive
-                // En MySQL usarías LIKE directamente (es case-insensitive por defecto)
             )
             ->when(
                 $filters['is_active'] ?? null,
@@ -116,8 +68,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
             ->when(
                 $filters['role_id'] ?? null,
                 fn($q, $v) => $q->whereHas('roles', fn($r) => $r->where('roles.id', $v))
-                // whereHas: filtra usuarios que TENGAN al menos un rol con ese ID
-                // Genera un WHERE EXISTS (SELECT 1 FROM user_roles WHERE ...)
             )
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -126,9 +76,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function create(array $data): User
     {
-        // El cast 'hashed' en el Model hashea el password automáticamente.
-        // No necesitamos Hash::make() aquí.
-        // Normalizamos el email al crear para consistencia en la DB.
         return User::create(array_merge($data, [
             'email' => strtolower(trim($data['email'])),
         ]));
@@ -137,9 +84,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
     public function update(User $user, array $data): User
     {
         $user->update($data);
-
-        // fresh() recarga el modelo desde la DB con sus relaciones.
-        // update() no actualiza los atributos del objeto en memoria.
         return $user->fresh(['company', 'roles']);
     }
 
@@ -147,8 +91,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
     {
         $user->update(['is_active' => false]);
 
-        // Revocar todos sus tokens activos.
-        // Un usuario desactivado no debe poder seguir usando sesiones activas.
         app(\App\Services\TokenService::class)->revokeAllUserTokens($user->id);
     }
 
@@ -161,8 +103,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function setEmailVerificationToken(User $user, string $token): void
     {
-        // Guardamos el token en caché con TTL de 24 horas.
-        // Clave: "email_verify:{userId}" → valor: token hasheado
         cache()->put(
             "email_verify:{$user->id}",
             hash('sha256', $token),
@@ -182,8 +122,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function setPasswordResetToken(User $user, string $token, \DateTimeInterface $expiresAt): void
     {
-        // Usamos la tabla estándar de Laravel para compatibilidad con
-        // el PasswordBroker. Token guardado como SHA-256 (nunca en texto plano).
         \DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $user->email],
             [
@@ -204,16 +142,11 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function updateLastLogin(User $user): void
     {
-        // updateQuietly: no dispara eventos del Model (Updating, Updated).
-        // Útil para updates de auditoría que no deben disparar side effects.
         $user->updateQuietly(['last_login_at' => now()]);
     }
 
     public function incrementFailedLogins(User $user): void
     {
-        // Guardamos intentos fallidos en caché, no en DB.
-        // Razón: se resetean frecuentemente y no necesitan persistencia.
-        // TTL: 15 minutos — después de ese tiempo se resetea solo.
         $key   = "failed_logins:{$user->id}";
         $count = (int) cache()->get($key, 0) + 1;
         cache()->put($key, $count, now()->addMinutes(15));
@@ -233,13 +166,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function assignRole(User $user, Role $role, ?string $branchId, ?string $assignedBy): void
     {
-        // ─── CONCEPTO: attach() con pivot data ────────────────
-        //
-        // Nuestra tabla pivote user_roles tiene columnas extra:
-        //   branch_id, expires_at, assigned_by
-        //
-        // syncWithoutDetaching() es idempotente: si el rol ya está
-        // asignado en ese scope, no lanza error de UNIQUE constraint.
         $user->roles()->syncWithoutDetaching([
             $role->id => [
                 'branch_id'   => $branchId,
@@ -253,7 +179,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function revokeRole(User $user, Role $role, ?string $branchId): void
     {
-        // wherePivot filtra por branch_id para no revocar otros scopes
         $user->roles()
              ->wherePivot('branch_id', $branchId)
              ->detach($role->id);
@@ -263,8 +188,6 @@ class UserRepository implements UserRepositoryInterface, UserRepositoryExtendedI
 
     public function syncRoles(User $user, array $roleIds, ?string $branchId): void
     {
-        // Sincroniza SOLO los roles del scope indicado.
-        // Los roles de otros branches no se tocan.
         $currentRoleIds = $user->roles()
             ->wherePivot('branch_id', $branchId)
             ->pluck('roles.id')

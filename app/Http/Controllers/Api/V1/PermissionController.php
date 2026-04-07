@@ -12,16 +12,6 @@ use App\Actions\Roles\{CreateRoleAction, UpdateRoleAction, DeleteRoleAction, Syn
 use App\Repositories\Interfaces\{RoleRepositoryInterface, PermissionRepositoryInterface};
 use App\Exceptions\Users\{UsersException, RoleNotFoundException};
 
-// ═══════════════════════════════════════════════════════════
-// PermissionController
-//
-// Los permisos del sistema son de solo lectura para la API.
-// Solo el super_admin puede crear permisos custom.
-//
-// Endpoints:
-//   GET /permissions             → todos los permisos disponibles
-//   GET /permissions/by-module   → agrupados por módulo (para UI de editar rol)
-// ═══════════════════════════════════════════════════════════
 
 class PermissionController extends Controller
 {
@@ -43,16 +33,13 @@ class PermissionController extends Controller
     }
 
     // GET /permissions/by-module
-    // Devuelve los permisos agrupados — ideal para renderizar la UI
-    // del editor de roles con checkboxes por módulo
+    // Devuelve los permisos agrupados
     public function byModule(Request $request): JsonResponse
     {
         $grouped = $this->permissionRepository->allGroupedByModule(
             $request->user()->company_id
         );
 
-        // Transformar a formato amigable para el frontend:
-        // { "products": [{ id, name, display_name }, ...], "sales": [...] }
         $data = collect($grouped)->map(fn($perms) =>
             collect($perms)->map(fn($p) => [
                 'id'           => $p['id'],

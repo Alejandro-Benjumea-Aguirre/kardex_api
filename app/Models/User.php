@@ -102,21 +102,11 @@ class User extends Authenticatable
     // PERMISOS (caché por sucursal)
     // ═══════════════════════════════════════════════════════
 
-    /**
-     * Devuelve los permisos del usuario para una sucursal desde Redis.
-     * Si no están cacheados, devuelve array vacío.
-     * Se llama desde TokenService al generar el access token.
-     */
     public function getCachedPermissions(string $branchId): array
     {
         return cache()->get("permissions:{$this->id}:{$branchId}", []);
     }
 
-    /**
-     * Carga los permisos desde la DB, los cachea en Redis y los devuelve.
-     * TTL = 15 minutos (igual que el access token).
-     * Devuelve array de nombres de permisos: ['users:read', 'roles:create', ...]
-     */
     public function loadAndCachePermissions(string $branchId): array
     {
         $this->loadMissing('roles.permissions');
@@ -133,17 +123,11 @@ class User extends Authenticatable
             now()->addMinutes(15)
         );
 
-        // Registramos el branchId en la lista de sucursales activas del usuario
-        // para poder invalidar todas las entradas en invalidatePermissionsCache()
         $this->trackCachedBranch($branchId);
 
         return $permissions;
     }
 
-    /**
-     * Verifica si el usuario tiene un permiso específico.
-     * Primero busca en caché; si no hay, carga desde la DB.
-     */
     public function hasPermission(string $permission, ?string $branchId = null): bool
     {
         $cacheKey = $branchId ?? '';
@@ -156,9 +140,6 @@ class User extends Authenticatable
         return in_array($permission, $cached, true);
     }
 
-    /**
-     * Verifica si el usuario tiene al menos uno de los permisos dados.
-     */
     public function hasAnyPermission(array $permissions, ?string $branchId = null): bool
     {
         foreach ($permissions as $permission) {
@@ -170,10 +151,6 @@ class User extends Authenticatable
         return false;
     }
 
-    /**
-     * Invalida el caché de permisos de todas las sucursales del usuario.
-     * Se llama en LogoutAllAction y en cambio de password.
-     */
     public function invalidatePermissionsCache(): void
     {
         $listKey = "permissions_branches:{$this->id}";

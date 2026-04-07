@@ -22,8 +22,4 @@ class ForgotPasswordRequest extends ApiFormRequest
         ];
     }
 
-    // IMPORTANTE: Aquí no validamos si el email existe en la DB
-    // porque eso revelaría qué emails están registrados.
-    // La validación de existencia se hace en la Action,
-    // y la respuesta es siempre la misma exista o no el email.
 }

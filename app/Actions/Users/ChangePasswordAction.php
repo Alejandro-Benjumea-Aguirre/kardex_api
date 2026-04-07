@@ -21,11 +21,10 @@ class ChangePasswordAction
     ) {}
 
     /**
-     * @throws InvalidCredentialsException si el password actual es incorrecto
+     * @throws InvalidCredentialsException
      */
     public function __invoke(User $user, ChangePasswordData $data): void
     {
-        // Verificar que el password actual sea correcto
         if (! \Hash::check($data->current_password, $user->password)) {
             throw new InvalidCredentialsException(
                 'La contraseña actual es incorrecta.'
@@ -34,9 +33,6 @@ class ChangePasswordAction
 
         $this->userRepository->update($user, ['password' => $data->password]);
 
-        // Revocar todos los tokens excepto el actual
-        // El usuario sigue logueado en este dispositivo pero
-        // los otros dispositivos deben volver a loguear
         app(\App\Services\TokenService::class)->revokeAllUserTokens($user->id);
     }
 }
