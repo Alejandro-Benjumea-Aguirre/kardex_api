@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SalesPoint — Diagrama ER</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 32px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 40px;
+  }
+
+  /* ── GRID PRINCIPAL ── */
+  .diagram {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── TABLA ── */
+  .table-card {
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    overflow: hidden;
+    font-size: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .table-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .table-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  .table-header .icon { font-size: 15px; }
+
+  .table-body { padding: 8px 0; }
+
+  .field {
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.1s;
+  }
+  .field:last-child { border-bottom: none; }
+  .field:hover { background: rgba(255,255,255,0.03); }
+
+  .field-icon { font-size: 11px; text-align: center; }
+  .field-name { color: #cbd5e1; font-family: 'Cascadia Code', 'Fira Code', monospace; }
+  .field-name.pk { color: #fbbf24; font-weight: 600; }
+  .field-name.fk { color: #60a5fa; }
+  .field-name.important { color: #a78bfa; }
+
+  .field-type {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: nowrap;
+  }
+
+  /* ── SECCIÓN DE RELACIONES ── */
+  .relations-section {
+    grid-column: 1 / -1;
+    background: #111827;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    padding: 20px 24px;
+    margin-top: 8px;
+  }
+
+  .relations-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 10px;
+  }
+
+  .relations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .relation {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #0f1117;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+  }
+
+  .rel-arrow {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .rel-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .rel-tables {
+    font-family: monospace;
+    font-size: 12px;
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+
+  .rel-desc {
+    font-size: 11px;
+    color: #475569;
+    line-height: 1.4;
+  }
+
+  /* ── SECCIÓN DE DECISIONES ── */
+  .decisions-section {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .decision-card {
+    background: #111827;
+    border-radius: 10px;
+    border: 1px solid #1e293b;
+    padding: 18px 20px;
+  }
+
+  .decision-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .decision-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .decision-badge {
+    flex-shrink: 0;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    height: fit-content;
+    margin-top: 1px;
+  }
+
+  .decision-text { color: #94a3b8; }
+  .decision-text strong { color: #e2e8f0; }
+
+  /* ── COLORES POR MÓDULO ── */
+  .mod-core    .table-header { background: #1e3a5f; color: #93c5fd; }
+  .mod-core    .field-type   { background: #0f2940; color: #60a5fa; }
+
+  .mod-product .table-header { background: #1a3a2a; color: #86efac; }
+  .mod-product .field-type   { background: #0d2018; color: #4ade80; }
+
+  .mod-sales   .table-header { background: #3a1a2a; color: #f9a8d4; }
+  .mod-sales   .field-type   { background: #200d18; color: #ec4899; }
+
+  .mod-purchase .table-header { background: #3a2a1a; color: #fcd34d; }
+  .mod-purchase .field-type   { background: #201508; color: #f59e0b; }
+
+  .mod-inventory .table-header { background: #2a1a3a; color: #c4b5fd; }
+  .mod-inventory .field-type   { background: #150d20; color: #a78bfa; }
+
+  .mod-system  .table-header { background: #1e2a3a; color: #94a3b8; }
+  .mod-system  .field-type   { background: #0f1520; color: #64748b; }
+
+  /* ── BADGE COLORES ── */
+  .badge-uuid    { background: #1e3a5f; color: #93c5fd; }
+  .badge-varchar { background: #1a3a2a; color: #86efac; }
+  .badge-decimal { background: #3a2a1a; color: #fcd34d; }
+  .badge-jsonb   { background: #2a1a3a; color: #c4b5fd; }
+  .badge-enum    { background: #3a1a2a; color: #f9a8d4; }
+  .badge-bool    { background: #1e2a2a; color: #67e8f9; }
+  .badge-ts      { background: #2a2a1a; color: #fde68a; }
+  .badge-int     { background: #2a1e1e; color: #fca5a5; }
+  .badge-text    { background: #1a2a1a; color: #a7f3d0; }
+  .badge-date    { background: #1e1e3a; color: #a5b4fc; }
+</style>
+</head>
+<body>
+
+<h1>🗃️ SalesPoint — Modelo de Datos Completo</h1>
+<p class="subtitle">8 migraciones · 20 tablas · PostgreSQL 16 · Laravel 11</p>
+
+<div class="diagram">
+
+  <!-- ══ MÓDULO CORE ══ -->
+
+  <div class="table-card mod-core">
+    <div class="table-header"><span class="icon">🏢</span> companies</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name</span><span class="field-type badge-varchar">VARCHAR(100)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">slug</span><span class="field-type badge-varchar">VARCHAR(100) UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">plan</span><span class="field-type badge-enum">ENUM</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">plan_limits</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">settings</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_active</span><span class="field-type badge-bool">BOOLEAN</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">created_at</span><span class="field-type badge-ts">TIMESTAMPTZ</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-core">
+    <div class="table-header"><span class="icon">🏪</span> branches</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name</span><span class="field-type badge-varchar">VARCHAR(100)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">code</span><span class="field-type badge-varchar">VARCHAR(20) UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">address / city</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">latitude / longitude</span><span class="field-type badge-decimal">DECIMAL</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">settings</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">invoice_counter</span><span class="field-type badge-int">BIGINT</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_active / is_main</span><span class="field-type badge-bool">BOOLEAN</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-core">
+    <div class="table-header"><span class="icon">👤</span> users</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK nullable</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">first_name / last_name</span><span class="field-type badge-varchar">VARCHAR(50)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">email</span><span class="field-type badge-varchar">VARCHAR(254) UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">password</span><span class="field-type badge-varchar">VARCHAR (hashed)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">role</span><span class="field-type badge-enum">ENUM</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_active / is_email_verified</span><span class="field-type badge-bool">BOOLEAN</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">last_login_at</span><span class="field-type badge-ts">TIMESTAMPTZ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">deleted_at</span><span class="field-type badge-ts">SoftDelete</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-core">
+    <div class="table-header"><span class="icon">🔀</span> branch_users <small style="opacity:.5;font-weight:400;font-size:10px">pivot M:M</small></div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">user_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_default</span><span class="field-type badge-bool">BOOLEAN</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">assigned_at</span><span class="field-type badge-date">DATE</span></div>
+    </div>
+  </div>
+
+  <!-- ══ MÓDULO PRODUCTOS ══ -->
+
+  <div class="table-card mod-product">
+    <div class="table-header"><span class="icon">🗂️</span> categories</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">parent_id</span><span class="field-type badge-uuid">UUID FK self</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name / slug</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">sort_order</span><span class="field-type badge-int">SMALLINT</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_active</span><span class="field-type badge-bool">BOOLEAN</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-product">
+    <div class="table-header"><span class="icon">📦</span> products</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">category_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name / sku / slug</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">cost_price / sale_price</span><span class="field-type badge-decimal">DECIMAL(12,2)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">tax_rate</span><span class="field-type badge-decimal">DECIMAL(5,2)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">type</span><span class="field-type badge-enum">ENUM</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">has_variants</span><span class="field-type badge-bool">BOOLEAN</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">images / attributes</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">search_vector</span><span class="field-type badge-text">TSVECTOR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">deleted_at</span><span class="field-type badge-ts">SoftDelete</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-product">
+    <div class="table-header"><span class="icon">🎨</span> product_variants</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">product_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name / sku</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">cost_price / sale_price</span><span class="field-type badge-decimal">DECIMAL nullable</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">attributes</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_default</span><span class="field-type badge-bool">BOOLEAN</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-product">
+    <div class="table-header"><span class="icon">🔍</span> barcodes</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">product_variant_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">code</span><span class="field-type badge-varchar">VARCHAR(100) UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">type</span><span class="field-type badge-enum">ENUM</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">is_primary</span><span class="field-type badge-bool">BOOLEAN</span></div>
+    </div>
+  </div>
+
+  <!-- ══ MÓDULO INVENTARIO ══ -->
+
+  <div class="table-card mod-inventory">
+    <div class="table-header"><span class="icon">📊</span> inventory</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">product_variant_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">quantity</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">min_stock / max_stock</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">avg_cost</span><span class="field-type badge-decimal">DECIMAL(12,4)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">location</span><span class="field-type badge-varchar">VARCHAR(50)</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-inventory">
+    <div class="table-header"><span class="icon">📋</span> stock_movements</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id / variant_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">type</span><span class="field-type badge-enum">ENUM (10 tipos)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">quantity</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">stock_before / after</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">reference_type / id</span><span class="field-type badge-varchar">Polimórfico</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">created_by</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">⚠️</span><span class="field-name" style="color:#ef4444">INMUTABLE</span><span class="field-type" style="background:#3a0d0d;color:#f87171">Solo INSERT</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-inventory">
+    <div class="table-header"><span class="icon">🚚</span> stock_transfers</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">from_branch_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">to_branch_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">status</span><span class="field-type badge-enum">ENUM (4 estados)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">sent_at / received_at</span><span class="field-type badge-ts">TIMESTAMPTZ</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-inventory">
+    <div class="table-header"><span class="icon">📄</span> stock_transfer_items</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">transfer_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">product_variant_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">quantity_sent</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">quantity_received</span><span class="field-type badge-decimal">DECIMAL nullable</span></div>
+    </div>
+  </div>
+
+  <!-- ══ MÓDULO VENTAS ══ -->
+
+  <div class="table-card mod-sales">
+    <div class="table-header"><span class="icon">🧑‍💼</span> customers</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">first_name / last_name</span><span class="field-type badge-varchar">VARCHAR nullable</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">document_type / number</span><span class="field-type badge-enum">ENUM + VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">total_purchases / spent</span><span class="field-type badge-decimal">Desnorm.</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-sales">
+    <div class="table-header"><span class="icon">🧾</span> sales</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id / customer_id / seller_id</span><span class="field-type badge-uuid">FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">invoice_number</span><span class="field-type badge-varchar">VARCHAR UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">status</span><span class="field-type badge-enum">ENUM (4)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">subtotal / tax / total</span><span class="field-type badge-decimal">DECIMAL(12,2)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">discount_type / value</span><span class="field-type badge-enum">ENUM + DECIMAL</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">metadata</span><span class="field-type badge-jsonb">JSONB</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-sales">
+    <div class="table-header"><span class="icon">🛒</span> sale_items</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">sale_id / variant_id</span><span class="field-type badge-uuid">FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">product_name / sku</span><span class="field-type badge-varchar">Snapshot</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">quantity</span><span class="field-type badge-decimal">DECIMAL(10,3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">unit_cost / unit_price</span><span class="field-type badge-decimal">Snapshot precios</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">tax_rate / tax_amount</span><span class="field-type badge-decimal">DECIMAL</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">subtotal / total</span><span class="field-type badge-decimal">DECIMAL(12,2)</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-sales">
+    <div class="table-header"><span class="icon">💳</span> payments</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">sale_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">method</span><span class="field-type badge-enum">ENUM (8 métodos)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">amount</span><span class="field-type badge-decimal">DECIMAL(12,2)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">cash_received / change</span><span class="field-type badge-decimal">DECIMAL nullable</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">status</span><span class="field-type badge-enum">ENUM (4)</span></div>
+    </div>
+  </div>
+
+  <!-- ══ MÓDULO COMPRAS ══ -->
+
+  <div class="table-card mod-purchase">
+    <div class="table-header"><span class="icon">🏭</span> suppliers</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">company_id</span><span class="field-type badge-uuid">UUID FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">name / nit</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">contact / email / phone</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">payment_terms_days</span><span class="field-type badge-int">SMALLINT</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-purchase">
+    <div class="table-header"><span class="icon">📝</span> purchase_orders</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id / supplier_id</span><span class="field-type badge-uuid">FK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">order_number</span><span class="field-type badge-varchar">VARCHAR UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">status</span><span class="field-type badge-enum">ENUM (6)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">total / tax</span><span class="field-type badge-decimal">DECIMAL(12,2)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">expected_date</span><span class="field-type badge-date">DATE</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-purchase">
+    <div class="table-header"><span class="icon">📥</span> purchases</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">branch_id / supplier_id</span><span class="field-type badge-uuid">FK</span></div>
+      <div class="field"><span class="field-icon">🔗</span><span class="field-name fk">purchase_order_id</span><span class="field-type badge-uuid">FK nullable</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">receipt_number</span><span class="field-type badge-varchar">VARCHAR UQ</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">supplier_invoice</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">payment_status</span><span class="field-type badge-enum">ENUM (3)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">payment_due_date</span><span class="field-type badge-date">DATE</span></div>
+    </div>
+  </div>
+
+  <!-- ══ MÓDULO SISTEMA ══ -->
+
+  <div class="table-card mod-system">
+    <div class="table-header"><span class="icon">🔎</span> audit_logs</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-int">BIGINT AI</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">company_id / user_id</span><span class="field-type badge-uuid">UUID (no FK)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">event</span><span class="field-type badge-varchar">VARCHAR(50)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">auditable_type / id</span><span class="field-type badge-varchar">Polimórfico</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">old_values / new_values</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">ip_address / user_agent</span><span class="field-type badge-varchar">VARCHAR</span></div>
+      <div class="field"><span class="field-icon">⚠️</span><span class="field-name" style="color:#ef4444">INMUTABLE</span><span class="field-type" style="background:#3a0d0d;color:#f87171">Solo INSERT</span></div>
+    </div>
+  </div>
+
+  <div class="table-card mod-system">
+    <div class="table-header"><span class="icon">🔔</span> notifications</div>
+    <div class="table-body">
+      <div class="field"><span class="field-icon">🔑</span><span class="field-name pk">id</span><span class="field-type badge-uuid">UUID PK</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">type</span><span class="field-type badge-varchar">VARCHAR (clase PHP)</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">notifiable_type / id</span><span class="field-type badge-varchar">Polimórfico</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name important">data</span><span class="field-type badge-jsonb">JSONB</span></div>
+      <div class="field"><span class="field-icon"> </span><span class="field-name">read_at</span><span class="field-type badge-ts">TIMESTAMPTZ null</span></div>
+    </div>
+  </div>
+
+  <!-- ══ RELACIONES ══ -->
+  <div class="relations-section">
+    <h2>⚡ Relaciones Clave</h2>
+    <div class="relations-grid">
+
+      <div class="relation">
+        <span class="rel-arrow">1→∞</span>
+        <div class="rel-text">
+          <span class="rel-tables">companies → branches</span>
+          <span class="rel-desc">Una empresa tiene N sucursales. cascadeOnDelete.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">∞↔∞</span>
+        <div class="rel-text">
+          <span class="rel-tables">users ↔ branches</span>
+          <span class="rel-desc">Many-to-Many via branch_users. Un cajero puede trabajar en múltiples locales.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">1→∞</span>
+        <div class="rel-text">
+          <span class="rel-tables">products → product_variants</span>
+          <span class="rel-desc">Camiseta tiene variantes M-Azul, L-Rojo. Siempre mínimo una variante "default".</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">⊕</span>
+        <div class="rel-text">
+          <span class="rel-tables">branch + variant → inventory</span>
+          <span class="rel-desc">Unique(branch_id, variant_id). Stock real por sucursal. updateOrCreate() en cada movimiento.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">🔒</span>
+        <div class="rel-text">
+          <span class="rel-tables">sales → stock_movements</span>
+          <span class="rel-desc">Transacción atómica. Venta + descuento stock + movimiento = todo o nada en una DB transaction.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">1→∞</span>
+        <div class="rel-text">
+          <span class="rel-tables">purchase_orders → purchases</span>
+          <span class="rel-desc">Una OC puede tener N recepciones (entregas parciales del proveedor).</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">◇</span>
+        <div class="rel-text">
+          <span class="rel-tables">stock_movements (polimórfico)</span>
+          <span class="rel-desc">reference_type + reference_id apunta a sale, purchase, transfer o adjustment.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">∞</span>
+        <div class="rel-text">
+          <span class="rel-tables">categories → categories (self)</span>
+          <span class="rel-desc">Árbol Adjacency List. parent_id → id. Hasta 3 niveles: Ropa > Camisetas > Polo.</span>
+        </div>
+      </div>
+
+      <div class="relation">
+        <span class="rel-arrow">💰</span>
+        <div class="rel-text">
+          <span class="rel-tables">sales → payments (1→∞)</span>
+          <span class="rel-desc">Split payment: $50k efectivo + $30k tarjeta = 2 registros en payments para 1 venta.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ DECISIONES DE DISEÑO ══ -->
+  <div class="decisions-section">
+
+    <div class="decision-card">
+      <h3 style="color:#60a5fa">📐 Decisiones de Tipos de Dato</h3>
+
+      <div class="decision-item">
+        <span class="decision-badge badge-uuid">UUID</span>
+        <span class="decision-text">PKs en todas las tablas expuestas en API. <strong>Excepción: audit_logs usa BIGINT</strong> por volumen de inserts y orden cronológico garantizado.</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge badge-decimal">DECIMAL</span>
+        <span class="decision-text"><strong>Nunca FLOAT para dinero.</strong> DECIMAL(12,2) para precios COP. DECIMAL(10,3) para cantidades con fracciones (kg, litros).</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge badge-jsonb">JSONB</span>
+        <span class="decision-text">Settings, attributes, metadata. <strong>JSONB sobre JSON</strong>: permite índices GIN y queries dentro del JSON. Costo: insert más lento.</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge badge-ts">TIMESTAMPTZ</span>
+        <span class="decision-text"><strong>Siempre con zona horaria.</strong> TIMESTAMP sin TZ tiene bugs garantizados en sistemas con múltiples zonas. PostgreSQL guarda en UTC.</span>
+      </div>
+    </div>
+
+    <div class="decision-card">
+      <h3 style="color:#f9a8d4">⚠️ Errores Comunes a Evitar</h3>
+
+      <div class="decision-item">
+        <span class="decision-badge" style="background:#3a0d0d;color:#fca5a5">❌</span>
+        <span class="decision-text"><strong>Poner stock en products.</strong> El stock va en inventory con branch_id. Si hay 5 sucursales, el producto existe una sola vez.</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge" style="background:#3a0d0d;color:#fca5a5">❌</span>
+        <span class="decision-text"><strong>Guardar precio actual en sale_items.</strong> El precio debe ser snapshot del momento de la venta. Nunca FK a la tabla de precios.</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge" style="background:#3a0d0d;color:#fca5a5">❌</span>
+        <span class="decision-text"><strong>Modificar stock_movements.</strong> Es inmutable. Si hay error, crear movimiento de ajuste que lo corrija. Igual que audit_logs.</span>
+      </div>
+
+      <div class="decision-item">
+        <span class="decision-badge" style="background:#3a0d0d;color:#fca5a5">❌</span>
+        <span class="decision-text"><strong>Actualizar stock sin transacción.</strong> Venta + descuento + movimiento = una sola DB::transaction(). Si falla alguno, rollback total.</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:32px;color:#334155;font-size:12px">
+  SalesPoint · 20 tablas · 8 migraciones · Laravel 11 + PostgreSQL 16
+</div>
+
+</body>
+</html>
