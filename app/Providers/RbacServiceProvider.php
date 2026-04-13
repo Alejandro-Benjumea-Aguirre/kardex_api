@@ -45,7 +45,6 @@ class RbacServiceProvider extends ServiceProvider
                 && $auth->company_id === $target->company_id;
         });
 
-        // Gate: ¿Puede asignar roles?
         Gate::define('assign-roles', function (User $auth, User $target) {
             // No puede asignarse roles a sí mismo (previene escalada de privilegios)
             if ($auth->id === $target->id) {
@@ -55,7 +54,6 @@ class RbacServiceProvider extends ServiceProvider
                 && $auth->company_id === $target->company_id;
         });
 
-        // Gate: ¿Puede gestionar este rol?
         Gate::define('manage-role', function (User $auth, \App\Models\Role $role) {
             // Los roles del sistema solo los gestiona el super_admin
             if ($role->isSystem()) {

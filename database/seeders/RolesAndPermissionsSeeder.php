@@ -7,45 +7,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\{Role, Permission};
 
-// ═══════════════════════════════════════════════════════════
-// RolesAndPermissionsSeeder
-//
-// CONCEPTO: ¿Qué es un Seeder y cuándo se ejecuta?
-// ═══════════════════════════════════════════════════════════
-//
-// Un Seeder carga datos iniciales en la DB.
-// Se ejecuta con: php artisan db:seed --class=RolesAndPermissionsSeeder
-// O junto con migrate: php artisan migrate --seed
-//
-// Este seeder es IDEMPOTENTE — podés ejecutarlo múltiples
-// veces sin duplicar datos. Usa firstOrCreate() que:
-//   → Si el registro existe: lo devuelve tal cual
-//   → Si no existe: lo crea
-//
-// ESTRUCTURA QUE CREA:
-//
-//   PERMISOS (todos globales, company_id = NULL):
-//     products:read, products:create, products:update, products:delete
-//     products:import, products:export
-//     sales:read, sales:create, sales:void, sales:refund, sales:discount
-//     inventory:read, inventory:manage, inventory:transfer, inventory:adjust
-//     purchases:read, purchases:create, purchases:approve, purchases:receive
-//     customers:read, customers:create, customers:update, customers:delete
-//     suppliers:read, suppliers:create, suppliers:update, suppliers:delete
-//     users:read, users:create, users:update, users:delete, users:assign-roles
-//     roles:read, roles:create, roles:update, roles:delete
-//     reports:view, reports:export
-//     settings:manage
-//     system:access, system:manage
-//
-//   ROLES (todos globales, company_id = NULL):
-//     super_admin → todos los permisos
-//     admin       → todo excepto system:*
-//     manager     → ventas, inventario, reportes, clientes
-//     cashier     → solo ventas y lectura de productos
-//     inventory   → solo inventario y compras
-//     viewer      → solo lectura de todo
-// ═══════════════════════════════════════════════════════════
 
 class RolesAndPermissionsSeeder extends Seeder
 {
