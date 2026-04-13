@@ -185,6 +185,42 @@ Route::prefix('v1')->group(function () {
 						->middleware('permission:category:update')
 						->name('activate');
 
+			Route::get('/subcategories', [CategoryController::class, 'subcategories'])
+                    ->middleware('permission:category:read')
+                    ->name('subcategories');
+
+		});
+
+	});
+
+		Route::middleware('auth.jwt')->prefix('products')->name('products.')->group(function () {
+	
+		Route::get('/', [ProductsController::class, 'index'])
+					->middleware('permission:products:read')
+					->name('index');
+
+		Route::post('/', [ProductsController::class, 'store'])
+					->middleware('permission:products:create')
+					->name('store');
+
+		Route::prefix('{product}')->group(function () {
+
+			Route::get('/', [ProductsController::class, 'show'])
+						->middleware('permission:products:read')
+						->name('show');
+
+			Route::put('/', [ProductsController::class, 'update'])
+						->middleware('permission:products:update')
+						->name('update');
+
+			Route::delete('/', [ProductsController::class, 'destroy'])
+						->middleware('permission:products:delete')
+						->name('destroy');
+
+			Route::post('/activate', [ProductsController::class, 'activate'])
+						->middleware('permission:products:update')
+						->name('activate');
+
 		});
 
 	});

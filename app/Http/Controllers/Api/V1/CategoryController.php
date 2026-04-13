@@ -84,6 +84,23 @@ class CategoryController extends Controller
 		]);
 	}
 
+	public function subcategories(string $categoryId): JsonResponse
+	{
+		$category = $this->categoryRepository->findByParent($categoryId);
+
+		if (! $category) {
+			return response()->json([
+				'success' => false,
+				'error'   => ['code' => 'CATEGORY_NOT_FOUND', 'message' => 'Categoria no encontrada.'],
+			], 404);
+		}
+
+		return response()->json([
+			'success' => true,
+			'data'    => new CategoryResource($category),
+		]);
+	}
+
 	// PUT /category/{category}
 	public function update(
 			UpdateCategoryRequest $request,
