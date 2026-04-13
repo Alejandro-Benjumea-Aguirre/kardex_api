@@ -193,7 +193,7 @@ Route::prefix('v1')->group(function () {
 
 	});
 
-		Route::middleware('auth.jwt')->prefix('products')->name('products.')->group(function () {
+	Route::middleware('auth.jwt')->prefix('products')->name('products.')->group(function () {
 	
 		Route::get('/', [ProductsController::class, 'index'])
 					->middleware('permission:products:read')
@@ -223,6 +223,9 @@ Route::prefix('v1')->group(function () {
 
 		});
 
+		Route::get('/{category}/products', [ProductController::class, 'byCategory'])
+					->middleware('permission:product:read')
+					->name('products');
 	});
 
 });
