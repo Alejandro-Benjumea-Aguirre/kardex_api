@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\V1\{
     UserController,
     RoleController,
     PermissionController,
-		CategoryController,
+	CategoryController,
+	ProductController,
+	
 };
 
 Route::prefix('v1')->group(function () {
@@ -226,6 +228,70 @@ Route::prefix('v1')->group(function () {
 		Route::get('/{category}/products', [ProductController::class, 'byCategory'])
 					->middleware('permission:product:read')
 					->name('products');
+
+		Route::prefix('{product}/variant')->name('variant.')->group(function () {
+
+			Route::get('/', [ProductVariantController::class, 'index'])
+				->middleware('permission:product:read')
+				->name('index');
+
+			Route::post('/', [ProductVariantController::class, 'store'])
+				->middleware('permission:product:create')
+				->name('store');
+
+			Route::prefix('{variant}')->group(function () {
+
+				Route::get('/', [ProductVariantController::class, 'show'])
+					->middleware('permission:product:read')
+					->name('show');
+
+				Route::put('/', [ProductVariantController::class, 'update'])
+					->middleware('permission:product:update')
+					->name('update');
+
+				Route::delete('/', [ProductVariantController::class, 'destroy'])
+					->middleware('permission:product:delete')
+					->name('destroy');
+
+				Route::post('/activate', [ProductVariantController::class, 'activate'])
+					->middleware('permission:product:update')
+					->name('activate');
+
+			});
+		});
+
+		// ── Barcodes ─────────────────────────────────────────
+		Route::prefix('{product}/barcode')->name('barcode.')->group(function () {
+
+			Route::get('/', [BarcodeController::class, 'index'])
+				->middleware('permission:product:read')
+				->name('index');
+
+			Route::post('/', [BarcodeController::class, 'store'])
+				->middleware('permission:product:create')
+				->name('store');
+
+			Route::prefix('{barcode}')->group(function () {
+
+				Route::get('/', [BarcodeController::class, 'show'])
+					->middleware('permission:product:read')
+					->name('show');
+
+				Route::put('/', [BarcodeController::class, 'update'])
+					->middleware('permission:product:update')
+					->name('update');
+
+				Route::delete('/', [BarcodeController::class, 'destroy'])
+					->middleware('permission:product:delete')
+					->name('destroy');
+
+			});
+		});
+
+		// ── Búsqueda por código de barras (para el POS) ───────
+		Route::get('/barcode/scan/{code}', [BarcodeController::class, 'scan'])
+			->middleware('permission:product:read')
+			->name('barcode.scan');
 	});
 
 });
