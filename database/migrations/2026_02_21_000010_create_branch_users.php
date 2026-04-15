@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 004 — branch_users
+// MIGRACIÓN 010 — branch_users
 //
 
 

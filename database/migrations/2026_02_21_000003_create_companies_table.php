@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 001 — companies
+// MIGRACIÓN 003 — companies
 //
 // CONCEPTO: Multi-tenancy
 // ═══════════════════════════════════════════════════════════

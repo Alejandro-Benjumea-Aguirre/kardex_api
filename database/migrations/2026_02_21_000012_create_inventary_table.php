@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 005 — inventory + stock_movements
+// MIGRACIÓN 012 — inventory + stock_movements
 //
 // CONCEPTO: El corazón del sistema de inventarios
 // ═══════════════════════════════════════════════════════════

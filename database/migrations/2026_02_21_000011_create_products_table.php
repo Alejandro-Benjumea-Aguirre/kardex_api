@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 004 — catálogo de productos
+// MIGRACIÓN 011 — catálogo de productos
 // Tablas: categories, products, product_variants, barcodes
 //
 // CONCEPTO: Catálogo compartido vs Stock por sucursal

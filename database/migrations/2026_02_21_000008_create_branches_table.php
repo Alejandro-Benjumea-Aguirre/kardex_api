@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 002 — branches (sucursales)
+// MIGRACIÓN 008 — branches (sucursales)
 //
 
 return new class extends Migration

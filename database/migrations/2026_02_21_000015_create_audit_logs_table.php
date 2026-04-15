@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 008 — audit_logs + notifications
+// MIGRACIÓN 015 — audit_logs + notifications
 //
 // CONCEPTO: Auditoría — el registro inmutable de todo
 // ═══════════════════════════════════════════════════════════

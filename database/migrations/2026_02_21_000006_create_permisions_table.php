@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 005 — permissions
+// MIGRACIÓN 006 — permissions
 //
 
 return new class extends Migration

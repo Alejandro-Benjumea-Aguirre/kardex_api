@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 007 — suppliers, purchase_orders, purchases
+// MIGRACIÓN 014 — suppliers, purchase_orders, purchases
 //
 // CONCEPTO: El ciclo de compras (Purchase Order → Receipt)
 // ═══════════════════════════════════════════════════════════

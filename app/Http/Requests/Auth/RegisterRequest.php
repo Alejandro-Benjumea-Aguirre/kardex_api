@@ -11,28 +11,40 @@ class RegisterRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'user.first_name'            => ['required', 'string', 'max:50'],
-            'user.last_name'             => ['required', 'string', 'max:50'],
-            'user.email'                 => ['required', 'string', 'email', 'max:254', 'unique:users,email'],
-            'user.password'              => ['required', 'string', 'min:8'],
-            'user.password_confirmation' => ['required', 'string', 'same:user.password'],
-            'user.role'                  => ['nullable', 'string'],
-            'company'                    => ['nullable', 'array'],
-            'company.name'               => ['nullable', 'string', 'max:100'],
-            'company.nit'                => ['nullable', 'string', 'max:20'],
+            // ─── Empresa ─────────────────────────────────
+            'company.name'     => ['required', 'string', 'max:100'],
+            'company.slug'     => ['nullable', 'string', 'max:100',
+                                    'unique:companies,slug'],
+            'company.plan'     => ['nullable', Rule::in([
+                                    'free', 'starter',
+                                    'professional', 'enterprise'
+                                  ])],
+            'company.logo_url' => ['nullable', 'url'],
+
+            // ─── Usuario admin ────────────────────────────
+            'user.first_name'        => ['required', 'string', 'max:100'],
+            'user.last_name'        => ['required', 'string', 'max:100'],
+            'user.email'       => ['required', 'email', 'unique:users,email'],
+            'user.password'    => ['required', 'confirmed', Password::min(8)
+                                    ->mixedCase()
+                                    ->numbers()],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'user.first_name.required'            => 'El nombre es obligatorio.',
-            'user.last_name.required'             => 'El apellido es obligatorio.',
-            'user.email.required'                 => 'El email es obligatorio.',
-            'user.email.unique'                   => 'Este email ya está registrado.',
-            'user.password.required'              => 'La contraseña es obligatoria.',
-            'user.password.min'                   => 'La contraseña debe tener al menos 8 caracteres.',
-            'user.password_confirmation.same'     => 'Las contraseñas no coinciden.',
+            // Empresa
+            'company.name.required'  => 'El nombre de la empresa es obligatorio.',
+            'company.slug.unique'    => 'Este slug ya está en uso.',
+
+            // Usuario
+            'user.first_name.required'  => 'El nombre del usuario es obligatorio.',
+            'user.last_name.required'   => 'El nombre del usuario es obligatorio.',
+            'user.email.required'       => 'El correo electrónico es obligatorio.',
+            'user.email.unique'         => 'Este correo ya está registrado.',
+            'user.password.required'    => 'La contraseña es obligatoria.',
+            'user.password.confirmed'   => 'Las contraseñas no coinciden.',
         ];
     }
 }

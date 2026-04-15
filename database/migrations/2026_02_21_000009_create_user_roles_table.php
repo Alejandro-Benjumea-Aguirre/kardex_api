@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 007 — user_roles
+// MIGRACIÓN 009 — user_roles
 //
 
 return new class extends Migration

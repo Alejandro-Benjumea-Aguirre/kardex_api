@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 006 — customers, sales, sale_items, payments
+// MIGRACIÓN 013 — customers, sales, sale_items, payments
 //
 // CONCEPTO: El flujo de una venta y por qué es tan complejo
 // ═══════════════════════════════════════════════════════════

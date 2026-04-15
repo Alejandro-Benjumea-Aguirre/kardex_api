@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // ═══════════════════════════════════════════════════════════
-// MIGRACIÓN 003 — users
+// MIGRACIÓN 004 — users
 //
 // CONCEPTO: Usuarios en contexto multi-tenant
 // ═══════════════════════════════════════════════════════════
