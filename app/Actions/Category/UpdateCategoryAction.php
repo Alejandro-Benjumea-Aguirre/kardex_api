@@ -7,11 +7,6 @@ namespace App\Actions\Category;
 use App\Data\Category\UpdateCategoryData;
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryExtendedInterface;
-use Spatie\LaravelData\Optional;
-
-// ═══════════════════════════════════════════════════════════
-// UpdateUserAction
-// ═══════════════════════════════════════════════════════════
 
 class UpdateCategoryAction
 {
@@ -19,18 +14,10 @@ class UpdateCategoryAction
         private readonly CategoryRepositoryExtendedInterface $categoryRepository,
     ) {}
 
-    public function __invoke(Category $category, UpdateCategoryData $data, Category $updatedBy): Category
+    public function __invoke(Category $category, UpdateCategoryData $data): Category
     {
+        $fields = array_filter($data->toArray(), fn($v) => $v !== null);
 
-        $fields = $data->toArray();
-
-        // Email: solo se actualiza si el updater tiene permiso
-        if (isset($fields['email']) && ! $updatedBy->hasPermission('category:update')) {
-            unset($fields['email']);
-        }
-
-        $allowedFields = array_filter($fields, fn($v) => $v !== null);
-
-        return $this->categoryRepository->update($category, $allowedFields);
+        return $this->categoryRepository->update($category, $fields);
     }
 }

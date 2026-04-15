@@ -336,6 +336,30 @@
     html.dark .feature-card p  { color: #94a3b8; }
     html.dark footer       { background: #070d1a; }
 
+    /* ── ENDPOINT GROUPS ── */
+    .endpoint-group { margin-top: 2.5rem; }
+    .endpoint-group:first-child { margin-top: 0; }
+    .endpoint-group-title {
+      font-size: .75rem; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: #3b82f6;
+      margin-bottom: 1rem; padding-bottom: .5rem;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    html.dark .endpoint-group-title { color: #60a5fa; border-bottom-color: #334155; }
+
+    .new-badge {
+      background: linear-gradient(135deg,#10b981 0%,#059669 100%);
+      color: white; font-size: .65rem; font-weight: 800;
+      padding: .15rem .5rem; border-radius: 20px;
+      letter-spacing: .05em; text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .endpoint-permission {
+      display: inline-block; margin-top: .4rem;
+      font-size: .72rem; color: #94a3b8; font-family: monospace;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav a { display: none; }
@@ -449,104 +473,422 @@
   <div class="endpoints-container">
     <h2 class="section-title" style="text-align:center">Endpoints principales</h2>
     <p class="section-subtitle" style="text-align:center">Referencia rápida de las rutas disponibles</p>
-    <div class="endpoints-grid">
+    <!-- ── Autenticación ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🔐 Autenticación</div>
+      <div class="endpoints-grid">
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method post">POST</span>
-          <span class="endpoint-path">/api/auth/login</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/login</span>
+          </div>
+          <p class="endpoint-desc">Autentica un usuario y devuelve un token JWT Bearer.</p>
         </div>
-        <p class="endpoint-desc">Autentica un usuario y devuelve un token JWT Bearer.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method post">POST</span>
-          <span class="endpoint-path">/api/auth/logout</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/register</span>
+          </div>
+          <p class="endpoint-desc">Registra un nuevo usuario junto con su empresa.</p>
         </div>
-        <p class="endpoint-desc">Invalida el token JWT activo del usuario autenticado.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method post">POST</span>
-          <span class="endpoint-path">/api/auth/refresh</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/refresh</span>
+          </div>
+          <p class="endpoint-desc">Genera un nuevo token JWT a partir de uno próximo a expirar.</p>
         </div>
-        <p class="endpoint-desc">Genera un nuevo token JWT a partir de uno próximo a expirar.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method get">GET</span>
-          <span class="endpoint-path">/api/auth/me</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/auth/me</span>
+          </div>
+          <p class="endpoint-desc">Devuelve la información del usuario autenticado actualmente.</p>
         </div>
-        <p class="endpoint-desc">Devuelve la información del usuario autenticado actualmente.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method get">GET</span>
-          <span class="endpoint-path">/api/productos</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/forgot-password</span>
+          </div>
+          <p class="endpoint-desc">Envía un correo para restablecer la contraseña.</p>
         </div>
-        <p class="endpoint-desc">Lista todos los productos del inventario con paginación.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method post">POST</span>
-          <span class="endpoint-path">/api/productos</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/logout</span>
+          </div>
+          <p class="endpoint-desc">Invalida el token JWT activo del usuario autenticado.</p>
         </div>
-        <p class="endpoint-desc">Crea un nuevo producto en el inventario.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method get">GET</span>
-          <span class="endpoint-path">/api/productos/{id}</span>
+      </div>
+    </div>
+
+    <!-- ── Usuarios ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">👤 Usuarios</div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/users</span>
+          </div>
+          <p class="endpoint-desc">Lista usuarios paginados con filtros de búsqueda y estado.</p>
+          <span class="endpoint-permission">🔑 users:read</span>
         </div>
-        <p class="endpoint-desc">Devuelve el detalle de un producto específico.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method put">PUT</span>
-          <span class="endpoint-path">/api/productos/{id}</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/users</span>
+          </div>
+          <p class="endpoint-desc">Crea un nuevo usuario asignándole un rol y sucursal.</p>
+          <span class="endpoint-permission">🔑 users:create</span>
         </div>
-        <p class="endpoint-desc">Actualiza los datos de un producto existente.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method delete">DELETE</span>
-          <span class="endpoint-path">/api/productos/{id}</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/users/{id}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza los datos de un usuario existente.</p>
+          <span class="endpoint-permission">🔑 users:update</span>
         </div>
-        <p class="endpoint-desc">Elimina un producto del inventario.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method get">GET</span>
-          <span class="endpoint-path">/api/ventas</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/users/{id}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva un usuario (soft delete).</p>
+          <span class="endpoint-permission">🔑 users:delete</span>
         </div>
-        <p class="endpoint-desc">Lista todas las órdenes de venta registradas.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method post">POST</span>
-          <span class="endpoint-path">/api/ventas</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/users/{id}/roles</span>
+          </div>
+          <p class="endpoint-desc">Asigna un rol a un usuario en una sucursal específica.</p>
+          <span class="endpoint-permission">🔑 users:assign-roles</span>
         </div>
-        <p class="endpoint-desc">Registra una nueva orden de venta con sus productos.</p>
-      </div>
 
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method get">GET</span>
-          <span class="endpoint-path">/api/compras</span>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/users/{id}/password</span>
+          </div>
+          <p class="endpoint-desc">Cambia la contraseña del usuario autenticado.</p>
         </div>
-        <p class="endpoint-desc">Lista todas las órdenes de compra a proveedores.</p>
-      </div>
 
+      </div>
+    </div>
+
+    <!-- ── Roles y Permisos ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🛡️ Roles &amp; Permisos</div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/roles</span>
+          </div>
+          <p class="endpoint-desc">Lista todos los roles disponibles de la empresa.</p>
+          <span class="endpoint-permission">🔑 roles:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/roles</span>
+          </div>
+          <p class="endpoint-desc">Crea un nuevo rol personalizado con permisos asignados.</p>
+          <span class="endpoint-permission">🔑 roles:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/roles/{id}/permissions</span>
+          </div>
+          <p class="endpoint-desc">Sincroniza (reemplaza) los permisos de un rol.</p>
+          <span class="endpoint-permission">🔑 roles:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/permissions</span>
+          </div>
+          <p class="endpoint-desc">Lista todos los permisos del sistema.</p>
+          <span class="endpoint-permission">🔑 roles:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/permissions/by-module</span>
+          </div>
+          <p class="endpoint-desc">Permisos agrupados por módulo (products, sales, users…).</p>
+          <span class="endpoint-permission">🔑 roles:read</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Categorías ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🗂️ Categorías</div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/category</span>
+          </div>
+          <p class="endpoint-desc">Lista categorías con paginación y filtros de búsqueda.</p>
+          <span class="endpoint-permission">🔑 category:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/category</span>
+          </div>
+          <p class="endpoint-desc">Crea una nueva categoría o subcategoría.</p>
+          <span class="endpoint-permission">🔑 category:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/category/{id}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza el nombre, descripción o imagen de la categoría.</p>
+          <span class="endpoint-permission">🔑 category:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/category/{id}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva una categoría (soft delete).</p>
+          <span class="endpoint-permission">🔑 category:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/category/{id}/subcategories</span>
+          </div>
+          <p class="endpoint-desc">Lista las subcategorías directas de una categoría padre.</p>
+          <span class="endpoint-permission">🔑 category:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/category/{id}/activate</span>
+          </div>
+          <p class="endpoint-desc">Reactiva una categoría previamente desactivada.</p>
+          <span class="endpoint-permission">🔑 category:update</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Productos ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">📦 Productos</div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products</span>
+          </div>
+          <p class="endpoint-desc">Lista productos paginados con filtros por categoría, búsqueda y estado.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/products</span>
+          </div>
+          <p class="endpoint-desc">Crea un producto con precios, impuestos, tipo y atributos.</p>
+          <span class="endpoint-permission">🔑 products:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle completo de un producto.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/products/{id}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza parcialmente los datos de un producto.</p>
+          <span class="endpoint-permission">🔑 products:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/products/{id}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva un producto (soft delete).</p>
+          <span class="endpoint-permission">🔑 products:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{categoryId}/products</span>
+          </div>
+          <p class="endpoint-desc">Lista todos los productos que pertenecen a una categoría.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Variantes de Producto ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🎨 Variantes de Producto <span class="new-badge">NUEVO</span></div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant</span>
+          </div>
+          <p class="endpoint-desc">Lista todas las variantes de un producto (tallas, colores, etc.).</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant</span>
+          </div>
+          <p class="endpoint-desc">Crea una nueva variante con su propio SKU y precio.</p>
+          <span class="endpoint-permission">🔑 products:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant/{variantId}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle de una variante con sus barcodes.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant/{variantId}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza nombre, precio o atributos de una variante.</p>
+          <span class="endpoint-permission">🔑 products:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant/{variantId}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva una variante del producto.</p>
+          <span class="endpoint-permission">🔑 products:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/products/{id}/variant/{variantId}/activate</span>
+          </div>
+          <p class="endpoint-desc">Reactiva una variante previamente desactivada.</p>
+          <span class="endpoint-permission">🔑 products:update</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Códigos de Barras ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">📊 Códigos de Barras <span class="new-badge">NUEVO</span></div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}/barcode</span>
+          </div>
+          <p class="endpoint-desc">Lista todos los barcodes asociados a las variantes del producto.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/products/{id}/barcode</span>
+          </div>
+          <p class="endpoint-desc">Asigna un código de barras (EAN13, QR, UPC…) a una variante.</p>
+          <span class="endpoint-permission">🔑 products:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/{id}/barcode/{barcodeId}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle de un barcode con su variante asociada.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/products/{id}/barcode/{barcodeId}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza el código, tipo o estado primario del barcode.</p>
+          <span class="endpoint-permission">🔑 products:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/products/{id}/barcode/{barcodeId}</span>
+          </div>
+          <p class="endpoint-desc">Elimina permanentemente un código de barras.</p>
+          <span class="endpoint-permission">🔑 products:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/products/barcode/scan/{code}</span>
+          </div>
+          <p class="endpoint-desc">Escanea un código y retorna la variante y producto. Ideal para POS.</p>
+          <span class="endpoint-permission">🔑 products:read</span>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>

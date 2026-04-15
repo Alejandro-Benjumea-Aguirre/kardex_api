@@ -7,10 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class Products extends Model
 {
@@ -64,9 +61,9 @@ class Products extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Categoria::class,);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     // ═══════════════════════════════════════════════════════

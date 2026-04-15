@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Actions\Products;
 
-use App\Data\Products\UpdateProductData;
-use App\Models\Product;
-use App\Repositories\Products\ProductRepository;
+use App\Data\Products\UpdateProductsData;
+use App\Models\Products;
+use App\Repositories\Interfaces\ProductsRepositoryExtendedInterface;
 use Illuminate\Support\Str;
 
 class UpdateProductAction
 {
     public function __construct(
-        private readonly ProductRepository $productRepository,
+        private readonly ProductsRepositoryExtendedInterface $productsRepository,
     ) {}
 
-    public function execute(Product $product, UpdateProductData $data): Product
+    public function __invoke(Products $product, UpdateProductsData $data): Products
     {
-        $updateData = array_filter($data->toArray(), fn($value) => !is_null($value));
+        $fields = array_filter($data->toArray(), fn($v) => $v !== null);
 
-        if (isset($updateData['name']) && !isset($updateData['slug'])) {
-            $updateData['slug'] = Str::slug($updateData['name']);
+        if (isset($fields['name']) && !isset($fields['slug'])) {
+            $fields['slug'] = Str::slug($fields['name']);
         }
 
-        return $this->productRepository->update($product, $updateData);
+        return $this->productsRepository->update($product, $fields);
     }
 }

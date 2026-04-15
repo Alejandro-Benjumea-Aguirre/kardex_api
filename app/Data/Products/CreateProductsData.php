@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\Rule;
 
-class CreateProductData extends Data
+class CreateProductsData extends Data
 {
     public function __construct(
         public readonly string  $name,

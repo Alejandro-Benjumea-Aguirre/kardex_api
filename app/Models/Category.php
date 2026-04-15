@@ -6,15 +6,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class Category extends Authenticatable
+class Category extends Model
 {
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -45,26 +44,21 @@ class Category extends Authenticatable
         return $this->belongsTo(Company::class);
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
-        return $this->belongsTo(Categoria::class, 'parent_id');
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function children()
+    public function children(): HasMany
     {
-        return $this->hasMany(Categoria::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function childrenRecursivos()
+    public function childrenRecursivos(): HasMany
     {
-        return $this->hasMany(Categoria::class, 'parent_id')
+        return $this->hasMany(Category::class, 'parent_id')
                     ->with('childrenRecursivos');
     }
-
-    // ═══════════════════════════════════════════════════════
-    // ACCESSORS
-    // ═══════════════════════════════════════════════════════
-
 
     // ═══════════════════════════════════════════════════════
     // MÉTODOS DE ESTADO
@@ -73,85 +67,5 @@ class Category extends Authenticatable
     public function isActive(): bool
     {
         return (bool) $this->is_active;
-    }
-
-    // ═══════════════════════════════════════════════════════
-    // PERMISOS (caché por sucursal)
-    // ═══════════════════════════════════════════════════════
-
-    public function getCachedPermissions(string $branchId): array
-    {
-        return cache()->get("permissions:{$this->id}:{$branchId}", []);
-    }
-
-    public function loadAndCachePermissions(string $branchId): array
-    {
-        $this->loadMissing('roles.permissions');
-
-        $permissions = $this->roles
-            ->flatMap(fn($role) => $role->permissions->pluck('name'))
-            ->unique()
-            ->values()
-            ->all();
-
-        cache()->put(
-            "permissions:{$this->id}:{$branchId}",
-            $permissions,
-            now()->addMinutes(15)
-        );
-
-        $this->trackCachedBranch($branchId);
-
-        return $permissions;
-    }
-
-    public function hasPermission(string $permission, ?string $branchId = null): bool
-    {
-        $cacheKey = $branchId ?? '';
-        $cached   = $this->getCachedPermissions($cacheKey);
-
-        if (empty($cached)) {
-            $cached = $this->loadAndCachePermissions($cacheKey);
-        }
-
-        return in_array($permission, $cached, true);
-    }
-
-    public function hasAnyPermission(array $permissions, ?string $branchId = null): bool
-    {
-        foreach ($permissions as $permission) {
-            if ($this->hasPermission($permission, $branchId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function invalidatePermissionsCache(): void
-    {
-        $listKey = "permissions_branches:{$this->id}";
-        $branches = cache()->get($listKey, []);
-
-        foreach ($branches as $branchId) {
-            cache()->forget("permissions:{$this->id}:{$branchId}");
-        }
-
-        cache()->forget($listKey);
-    }
-
-    // ═══════════════════════════════════════════════════════
-    // HELPERS PRIVADOS
-    // ═══════════════════════════════════════════════════════
-
-    private function trackCachedBranch(string $branchId): void
-    {
-        $listKey  = "permissions_branches:{$this->id}";
-        $branches = cache()->get($listKey, []);
-
-        if (! in_array($branchId, $branches, true)) {
-            $branches[] = $branchId;
-            cache()->put($listKey, $branches, now()->addDays(30));
-        }
     }
 }

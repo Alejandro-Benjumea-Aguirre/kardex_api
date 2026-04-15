@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace App\Repositories\Eloquent;
 
 use App\Models\Products;
-use App\Repositories\Interfaces\ProductsRepositoryInterface;
 use App\Repositories\Interfaces\ProductsRepositoryExtendedInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ProductsRepository implements ProductsRepositoryInterface, ProductsRepositoryExtendedInterface
+class ProductsRepository implements ProductsRepositoryExtendedInterface
 {
     // ─── BÚSQUEDAS ────────────────────────────────────────
 
     public function findById(string $id): ?Products
     {
-        return Products::with(['company', 'roles.permissions'])->find($id);
+        return Products::with(['company', 'category'])->find($id);
     }
-
 
     public function findByCategory(string $category_id): Collection
     {
-        return Products::with(['company'])
-                    ->where('category_id', $parent_id)
+        return Products::with(['company', 'category'])
+                    ->where('category_id', $category_id)
                     ->get();
     }
 
@@ -30,7 +29,7 @@ class ProductsRepository implements ProductsRepositoryInterface, ProductsReposit
 
     public function paginate(array $filters, int $perPage = 20): LengthAwarePaginator
     {
-        return Products::with(['company'])
+        return Products::with(['company', 'category'])
             ->when(
                 $filters['company_id'] ?? null,
                 fn($q, $v) => $q->where('company_id', $v)
@@ -56,25 +55,22 @@ class ProductsRepository implements ProductsRepositoryInterface, ProductsReposit
 
     public function create(array $data): Products
     {
-        return Products::create(array_merge($data));
+        return Products::create($data);
     }
 
     public function update(Products $product, array $data): Products
     {
         $product->update($data);
-        return $product->fresh(['company']);
+        return $product->fresh(['company', 'category']);
     }
 
     public function deactivate(Products $product): void
     {
         $product->update(['is_active' => false]);
-
-        app(\App\Services\TokenService::class)->revokeAllUserTokens($user->id);
     }
 
     public function activate(Products $product): void
     {
         $product->update(['is_active' => true]);
     }
-
 }

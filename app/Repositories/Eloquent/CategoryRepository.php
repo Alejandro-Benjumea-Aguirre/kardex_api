@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Repositories\Eloquent;
 
 use App\Models\Category;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryExtendedInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class CategoryRepository implements CategoryRepositoryInterface, CategoryRepositoryExtendedInterface
+class CategoryRepository implements CategoryRepositoryExtendedInterface
 {
     // ─── BÚSQUEDAS ────────────────────────────────────────
 
     public function findById(string $id): ?Category
     {
-        return Category::with(['company', 'roles.permissions'])->find($id);
+        return Category::with(['company'])->find($id);
     }
-
 
     public function findByParent(string $parent_id): Collection
     {
@@ -46,14 +45,13 @@ class CategoryRepository implements CategoryRepositoryInterface, CategoryReposit
                 $filters['is_active'] ?? null,
                 fn($q, $v) => $q->where('is_active', filter_var($v, FILTER_VALIDATE_BOOLEAN))
             )
-            ->orderBy('first_name')
-            ->orderBy('last_name')
+            ->orderBy('name')
             ->paginate($perPage);
     }
 
     public function create(array $data): Category
     {
-        return Category::create(array_merge($data));
+        return Category::create($data);
     }
 
     public function update(Category $category, array $data): Category
@@ -65,13 +63,10 @@ class CategoryRepository implements CategoryRepositoryInterface, CategoryReposit
     public function deactivate(Category $category): void
     {
         $category->update(['is_active' => false]);
-
-        app(\App\Services\TokenService::class)->revokeAllUserTokens($user->id);
     }
 
     public function activate(Category $category): void
     {
         $category->update(['is_active' => true]);
     }
-
 }

@@ -15,10 +15,10 @@ interface CategoryRepositoryExtendedInterface
 
     public function paginate(array $filters, int $perPage = 20): \Illuminate\Pagination\LengthAwarePaginator;
     public function findById(string $id): ?\App\Models\Category;
-    public function findByParent(string $id): ?\App\Models\Category;
+    public function findByParent(string $id): \Illuminate\Database\Eloquent\Collection;
     public function create(array $data): \App\Models\Category;
-    public function update(\App\Models\User $category, array $data): \App\Models\Category;
-    public function deactivate(\App\Models\Category; $category): void;
-    public function activate(\App\Models\Category; $category): void;
+    public function update(\App\Models\Category $category, array $data): \App\Models\Category;
+    public function deactivate(\App\Models\Category $category): void;
+    public function activate(\App\Models\Category $category): void;
 
 }
