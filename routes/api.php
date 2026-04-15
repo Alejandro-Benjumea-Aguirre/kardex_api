@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\{
     ProductsController,
     ProductVariantController,
     BarcodeController,
+	BranchController
 };
 
 Route::prefix('v1')->group(function () {
@@ -154,6 +155,41 @@ Route::prefix('v1')->group(function () {
 		Route::get('/by-module', [PermissionController::class, 'byModule'])
 					->middleware('permission:roles:read')
 					->name('by-module');
+	});
+
+	// ══════════════════════════════════════════════════════
+	// Sucursales
+	// ══════════════════════════════════════════════════════
+
+	Route::middleware('auth.jwt')->prefix('branch')->name('branch.')->group(function () {
+
+		Route::get('/', [BranchController::class, 'index'])
+					->middleware('permission:branch:read')
+					->name('index');
+
+		Route::post('/', [BranchController::class, 'store'])
+					->middleware('permission:branch:create')
+					->name('store');
+
+		Route::prefix('{branch}')->group(function () {
+
+			Route::get('/', [BranchController::class, 'show'])
+						->middleware('permission:branch:read')
+						->name('show');
+
+			Route::put('/', [BranchController::class, 'update'])
+						->middleware('permission:branch:update')
+						->name('update');
+
+			Route::delete('/', [BranchController::class, 'destroy'])
+						->middleware('permission:branch:delete')
+						->name('destroy');
+
+			Route::post('/activate', [BranchController::class, 'activate'])
+						->middleware('permission:branch:update')
+						->name('activate');
+
+		});
 	});
 
 	// ══════════════════════════════════════════════════════
