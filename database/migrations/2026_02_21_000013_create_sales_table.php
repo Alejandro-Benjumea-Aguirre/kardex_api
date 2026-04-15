@@ -29,7 +29,6 @@ return new class extends Migration
             $table->string('first_name', 50)->nullable(); // nullable para clientes anónimos
             $table->string('last_name', 50)->nullable();
 
-            // Tipo de documento de identificación
             $table->enum('document_type', ['cc', 'nit', 'ce', 'passport', 'other'])->nullable();
             $table->string('document_number', 20)->nullable();
 
@@ -37,7 +36,6 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->string('address', 255)->nullable();
 
-            // Para clientes empresariales (NIT)
             $table->string('company_name', 100)->nullable();
 
             $table->unsignedInteger('total_purchases')->default(0);
@@ -48,7 +46,6 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletes();
 
-            // Número de documento único por empresa
             $table->unique(['company_id', 'document_type', 'document_number']);
             $table->index(['company_id', 'email']);
         });
@@ -65,13 +62,11 @@ return new class extends Migration
                   ->constrained('branches')
                   ->restrictOnDelete(); // No borrar sucursal con ventas
 
-            // Cliente opcional — puede ser venta sin identificar cliente
             $table->foreignUuid('customer_id')
                   ->nullable()
                   ->constrained('customers')
                   ->nullOnDelete();
 
-            // Vendedor que realizó la venta
             $table->foreignUuid('seller_id')
                   ->constrained('users')
                   ->restrictOnDelete();

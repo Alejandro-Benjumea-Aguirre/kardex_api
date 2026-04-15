@@ -35,26 +35,17 @@ return new class extends Migration
             //
             $table->decimal('quantity', 10, 3)->default(0);
 
-            // Stock mínimo antes de generar alerta de reabastecimiento
             $table->decimal('min_stock', 10, 3)->default(0);
 
-            // Stock máximo para evitar sobreabastecimiento
             $table->decimal('max_stock', 10, 3)->nullable();
 
             // ─── UBICACIÓN FÍSICA ─────────────────────────────
-            // En tiendas grandes, cada producto tiene una ubicación
-            // específica: pasillo A, estante 3, posición 2
+            // 
             $table->string('location', 50)->nullable(); // "A3-2"
 
             // ─── COSTO PROMEDIO PONDERADO ─────────────────────
             //
-            // CONCEPTO: Métodos de valoración de inventario
-            //
-            // Hay 3 métodos principales para valorar el inventario:
-            //
-            // Fórmula:
-            //   nuevo_costo_promedio = (stock_actual * costo_actual + nuevas_unidades * costo_compra)
-            //                         / (stock_actual + nuevas_unidades)
+            // 
             $table->decimal('avg_cost', 12, 4)->default(0); // 4 decimales para precisión
 
             $table->timestampsTz();
@@ -83,16 +74,7 @@ return new class extends Migration
 
             // ─── TIPO DE MOVIMIENTO ───────────────────────────
             //
-            // Cada tipo afecta el stock de forma diferente:
-            //
-            // ENTRADAS (+):              SALIDAS (-):
-            //   purchase  → compra         sale      → venta
-            //   return    → devolución de  adjustment → ajuste negativo
-            //               cliente          waste    → merma/daño
-            //   adjustment → ajuste +      transfer_out → transferencia salida
-            //   transfer_in → transferencia
-            //               entrada
-            //
+
             $table->enum('type', [
                 'purchase',       // Entrada por compra a proveedor
                 'sale',           // Salida por venta

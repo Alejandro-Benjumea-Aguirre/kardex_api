@@ -57,14 +57,7 @@ return new class extends Migration
 
             // ─── SCOPE DEL ROL ────────────────────────────────
             //
-            // nullable: rol global del sistema (NULL) o de empresa (UUID)
-            //
-            // Ejemplos roles globales (company_id = NULL):
-            //   - super_admin: acceso a todas las empresas
-            //
-            // Ejemplos roles de empresa (company_id = UUID):
-            //   - admin, manager, cajero, inventario, viewer
-            //   - roles personalizados que cada empresa crea
+
             $table->foreignUuid('company_id')
                   ->nullable()
                   ->constrained('companies')
@@ -72,34 +65,19 @@ return new class extends Migration
 
             // ─── IDENTIFICACIÓN DEL ROL ───────────────────────
             //
-            // name: nombre técnico del rol, usado en código
-            //   "admin", "cashier", "inventory_manager"
-            //   Sin espacios, en minúsculas, con guiones bajos.
-            //   Se usa en las gates de Laravel: $user->can('admin')
-            //
-            // display_name: nombre legible para el usuario final
-            //   "Administrador", "Cajero", "Encargado de Inventario"
-            //   Se muestra en la UI
+
             $table->string('name', 100);
             $table->string('display_name', 150);
             $table->text('description')->nullable();
 
             // ─── ROL PREDETERMINADO ────────────────────────────
             //
-            // Cuando se crea un nuevo usuario en una empresa,
-            // ¿qué rol se le asigna automáticamente?
-            //
-            // Solo puede haber UN rol default por empresa.
-            // Esto se valida en la aplicación (no en DB con constraint
-            // porque requeriría un partial unique index complejo).
+
             $table->boolean('is_default')->default(false);
 
             // ─── ROL DEL SISTEMA ──────────────────────────────
             //
-            // Los roles del sistema (is_system = true) no pueden
-            // ser editados ni borrados por los admins de empresa.
-            // Solo el super_admin puede modificarlos.
-            // Ejemplo: el rol "super_admin" no puede desaparecer.
+
             $table->boolean('is_system')->default(false);
 
             $table->boolean('is_active')->default(true);
@@ -109,12 +87,7 @@ return new class extends Migration
 
             // ─── ÍNDICES ─────────────────────────────────────
             //
-            // name único dentro del scope de la empresa.
-            // NULL y NULL NO son iguales en SQL (NULL != NULL),
-            // entonces este UNIQUE funciona correctamente:
-            //   - dos roles globales no pueden tener el mismo name
-            //   - dos roles de la misma empresa no pueden tener el mismo name
-            //   - una empresa puede tener un rol 'admin' aunque el global también exista
+
             $table->unique(['company_id', 'name']);
             $table->index(['company_id', 'is_active']);
         });

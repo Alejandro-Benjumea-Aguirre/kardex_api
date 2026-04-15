@@ -19,11 +19,7 @@ return new class extends Migration
         // TABLA: categories
         // ─────────────────────────────────────────────────────
         //
-        // Categorías con soporte de árbol (padre-hijo).
-        // Ejemplo: Electrónica > Celulares > Smartphones
-        //
-        // CONCEPTO: Árboles en bases de datos relacionales
-        //
+
         Schema::create('categories', function (Blueprint $table) {
 
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
@@ -39,7 +35,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image_url')->nullable();
 
-            // Orden de visualización dentro del mismo padre
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
 
@@ -50,9 +45,6 @@ return new class extends Migration
             $table->index(['company_id', 'is_active', 'sort_order']);
         });
 
-        // Referencia al padre. null = categoría raíz.
-        // nullOnDelete(): Si se borra la categoría padre,
-        // los hijos pasan a ser categorías raíz (no se borran).
         Schema::table('categories', function (Blueprint $table) {
         $table->foreign('parent_id')
               ->references('id')
@@ -81,8 +73,6 @@ return new class extends Migration
             $table->string('slug', 220);
             $table->text('description')->nullable();
 
-            // SKU: Stock Keeping Unit — código interno único del producto
-            // Único dentro de la empresa
             $table->string('sku', 100);
 
             // ─── PRECIOS ─────────────────────────────────────
@@ -110,8 +100,7 @@ return new class extends Migration
 
             // ─── ATRIBUTOS EXTRAS ─────────────────────────────
             //
-            // Datos específicos de cada producto que no caben en columnas fijas.
-            // Ejemplo: { "weight_kg": 0.5, "material": "100% algodón" }
+
             $table->jsonb('attributes')->default('{}');
 
             $table->boolean('is_active')->default(true);
@@ -131,12 +120,8 @@ return new class extends Migration
         //
         DB::statement('ALTER TABLE products ADD COLUMN search_vector tsvector NULL');
 
-        // Índice GIN para full-text search — el más importante
         DB::statement('CREATE INDEX products_search_idx ON products USING GIN(search_vector)');
 
-        // Trigger para mantener search_vector actualizado automáticamente
-        // Cada vez que se inserta o actualiza un producto, PostgreSQL
-        // recalcula el tsvector sin que la aplicación tenga que hacer nada.
         DB::statement("
             CREATE OR REPLACE FUNCTION products_search_vector_update()
             RETURNS TRIGGER AS $$
@@ -175,12 +160,9 @@ return new class extends Migration
             $table->string('name', 200); // "Talla M - Color Azul" o "Default"
             $table->string('sku', 100)->nullable(); // Puede heredar el SKU del producto
 
-            // Precio puede ser diferente al del producto base
-            // null = usa el precio del producto
             $table->decimal('cost_price', 12, 2)->nullable();
             $table->decimal('sale_price', 12, 2)->nullable();
 
-            // Atributos de esta variante: { "talla": "M", "color": "Azul" }
             $table->jsonb('attributes')->default('{}');
 
             $table->string('image_url')->nullable();
@@ -206,10 +188,8 @@ return new class extends Migration
                   ->constrained('product_variants')
                   ->cascadeOnDelete();
 
-            // El código en sí — puede ser EAN-13, QR, código interno, etc.
             $table->string('code', 100)->unique(); // Único globalmente
 
-            // Tipo de código para el scanner saber cómo interpretarlo
             $table->enum('type', ['ean13', 'ean8', 'upc', 'qr', 'custom'])
                   ->default('ean13');
 
