@@ -460,6 +460,11 @@
         <p>Administración de cuentas de usuario: consulta de perfil, actualización de datos y gestión de roles.</p>
       </div>
       <div class="feature-card">
+        <div class="feature-icon">🏢</div>
+        <h3>Sucursales</h3>
+        <p>Gestión de sucursales por empresa: creación, configuración de horarios, datos de contacto y control de estado.</p>
+      </div>
+      <div class="feature-card">
         <div class="feature-icon">📊</div>
         <h3>Reportes</h3>
         <p>Endpoints dedicados para la generación de reportes filtrados por fecha, categoría o tipo de movimiento.</p>
@@ -638,6 +643,68 @@
           </div>
           <p class="endpoint-desc">Permisos agrupados por módulo (products, sales, users…).</p>
           <span class="endpoint-permission">🔑 roles:read</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Sucursales ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🏢 Sucursales <span class="new-badge">NUEVO</span></div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/branch</span>
+          </div>
+          <p class="endpoint-desc">Lista sucursales paginadas con filtros de búsqueda y estado.</p>
+          <span class="endpoint-permission">🔑 branch:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/branch</span>
+          </div>
+          <p class="endpoint-desc">Crea una sucursal con dirección, contacto, horarios y configuración.</p>
+          <span class="endpoint-permission">🔑 branch:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/branch/{id}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle completo de una sucursal.</p>
+          <span class="endpoint-permission">🔑 branch:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/branch/{id}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza parcialmente los datos de una sucursal.</p>
+          <span class="endpoint-permission">🔑 branch:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/branch/{id}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva una sucursal (soft delete).</p>
+          <span class="endpoint-permission">🔑 branch:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/branch/{id}/activate</span>
+          </div>
+          <p class="endpoint-desc">Reactiva una sucursal previamente desactivada.</p>
+          <span class="endpoint-permission">🔑 branch:update</span>
         </div>
 
       </div>

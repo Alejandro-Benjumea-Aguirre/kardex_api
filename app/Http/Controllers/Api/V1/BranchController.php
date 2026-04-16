@@ -10,7 +10,7 @@ use App\Http\Requests\Branch\{
     CreateBranchRequest, UpdateBranchRequest
 };
 use App\Http\Resources\BranchResource;
-use App\Data\Users\{CreateBranchData, UpdateBranchData};
+use App\Data\Branch\{CreateBranchData, UpdateBranchData};
 use App\Actions\Branch\{
     CreateBranchAction, UpdateBranchAction, DeactivateBranchAction, ActivateBranchAction
 };
@@ -52,12 +52,12 @@ class BranchController extends Controller
     public function store(CreateBranchRequest $request, CreateBranchAction $action): JsonResponse
     {
         try {
-            $branch = $action(CreateBranchData::from($request), $request->branch());
+            $branch = $action(CreateBranchData::from($request));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Sucursal creada correctamente.',
-                'data'    => new BranchResource($user),
+                'data'    => new BranchResource($branch),
             ], 201);
 
         } catch (BranchException $e) {
@@ -96,12 +96,12 @@ class BranchController extends Controller
         }
 
         try {
-            $updated = $action($branch, UpdateBranchData::from($request), $request->branch());
+            $updated = $action($branch, UpdateBranchData::from($request));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Sucursal actualizada correctamente.',
-                'data'    => new UserResource($updated),
+                'data'    => new BranchResource($updated),
             ]);
 
         } catch (BranchException $e) {
@@ -122,7 +122,7 @@ class BranchController extends Controller
         }
 
         try {
-            $action($branch, $request->branch());
+            $action($branch);
 
             return response()->json([
                 'success' => true,
@@ -140,7 +140,7 @@ class BranchController extends Controller
     // POST /branch/{branch}/activate
     public function activate(
         string               $branchId,
-        ActivatebranchAction $action,
+        ActivateBranchAction $action,
     ): JsonResponse {
         $branch = $this->branchRepository->findById($branchId);
 

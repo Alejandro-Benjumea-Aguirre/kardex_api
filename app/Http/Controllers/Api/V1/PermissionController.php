@@ -6,11 +6,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\{JsonResponse, Request};
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Roles\{CreateRoleRequest, UpdateRoleRequest, SyncPermissionsRequest};
-use App\Http\Resources\{RoleResource, PermissionResource};
-use App\Actions\Roles\{CreateRoleAction, UpdateRoleAction, DeleteRoleAction, SyncPermissionsAction};
-use App\Repositories\Interfaces\{RoleRepositoryInterface, PermissionRepositoryInterface};
-use App\Exceptions\Users\{UsersException, RoleNotFoundException};
+use App\Http\Resources\PermissionResource;
+use App\Repositories\Interfaces\PermissionRepositoryInterface;
 
 
 class PermissionController extends Controller

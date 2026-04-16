@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Branches;
+namespace App\Actions\Branch;
 
-use App\Data\Branches\CreateBranchData;
+use App\Data\Branch\CreateBranchData;
 use App\Models\Branch;
 use App\Repositories\Interfaces\BranchRepositoryExtendedInterface;
 

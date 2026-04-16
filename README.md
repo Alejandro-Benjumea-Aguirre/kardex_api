@@ -189,6 +189,65 @@ El token se obtiene desde `POST /api/v1/auth/login`.
 
 ---
 
+### Sucursales (`/branch`) — Requiere JWT
+
+| Método | Endpoint | Descripción | Permiso |
+|---|---|---|---|
+| `GET` | `/branch` | Listar sucursales paginadas | `branch:read` |
+| `POST` | `/branch` | Crear sucursal | `branch:create` |
+| `GET` | `/branch/{id}` | Ver sucursal | `branch:read` |
+| `PUT` | `/branch/{id}` | Actualizar sucursal | `branch:update` |
+| `DELETE` | `/branch/{id}` | Desactivar sucursal | `branch:delete` |
+| `POST` | `/branch/{id}/activate` | Activar sucursal | `branch:update` |
+
+#### Query params para `GET /branch`
+| Param | Tipo | Descripción |
+|---|---|---|
+| `search` | string | Búsqueda por nombre o código |
+| `is_active` | boolean | Filtrar por estado |
+| `per_page` | integer | Resultados por página (default: 20) |
+
+#### `POST /branch`
+```json
+{
+  "company_id": "uuid-de-la-empresa",
+  "name": "Sucursal Centro",
+  "code": "SUC-001",
+  "address": "Calle 10 # 5-23",
+  "city": "Medellín",
+  "state": "Antioquia",
+  "country": "CO",
+  "latitude": 6.2442,
+  "longitude": -75.5812,
+  "phone": "3001234567",
+  "email": "centro@ejemplo.com",
+  "settings": {
+    "opening_time": "08:00",
+    "closing_time": "20:00",
+    "receipt_printer": null,
+    "allow_credit": false
+  },
+  "is_active": true,
+  "is_main": true
+}
+```
+
+#### `PUT /branch/{id}`
+```json
+{
+  "name": "Sucursal Centro Actualizada",
+  "phone": "3119876543",
+  "settings": {
+    "closing_time": "22:00",
+    "allow_credit": true
+  }
+}
+```
+
+> **Nota:** El campo `code` debe ser único por empresa. El campo `country` usa código ISO de 2 letras (ej: `CO`, `US`).
+
+---
+
 ### Categorías (`/category`) — Requiere JWT
 
 | Método | Endpoint | Descripción | Permiso |
@@ -454,6 +513,7 @@ Los permisos siguen el patrón `modulo:accion`:
 |---|---|
 | `users` | `read`, `create`, `update`, `delete`, `assign-roles` |
 | `roles` | `read`, `create`, `update`, `delete` |
+| `branch` | `read`, `create`, `update`, `delete` |
 | `category` | `read`, `create`, `update`, `delete` |
 | `products` | `read`, `create`, `update`, `delete` |
 

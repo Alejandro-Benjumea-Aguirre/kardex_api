@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Branches;
+namespace App\Http\Requests\Branch;
 
 use Illuminate\Validation\Rule;
 
