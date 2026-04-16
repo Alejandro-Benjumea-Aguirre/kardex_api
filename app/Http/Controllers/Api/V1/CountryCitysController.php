@@ -33,10 +33,10 @@ class CountryCitysController extends Controller
             'success' => true,
             'data'    => CountryResource::collection($country),
             'meta'    => [
-                'current_page' => $branch->currentPage(),
-                'per_page'     => $branch->perPage(),
-                'total'        => $branch->total(),
-                'last_page'    => $branch->lastPage(),
+                'current_page' => $country->currentPage(),
+                'per_page'     => $country->perPage(),
+                'total'        => $country->total(),
+                'last_page'    => $country->lastPage(),
             ],
         ]);
     }
@@ -96,7 +96,7 @@ class CountryCitysController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => new CityResource($country),
+            'data'    => new CityResource($city),
         ]);
     }
 

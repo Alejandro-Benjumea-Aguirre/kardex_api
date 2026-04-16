@@ -20,6 +20,8 @@ use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\ProductsRepository;
 use App\Repositories\Eloquent\BranchRepository;
 use App\Repositories\Eloquent\CompanyRepository;
+use App\Repositories\Eloquent\InventaryRepository;
+use App\Repositories\Interfaces\InventaryRepositoryExtendedInterface;
 use App\Services\TokenService;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -32,7 +34,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(CategoryRepositoryExtendedInterface::class, CategoryRepository::class);
         $this->app->bind(ProductsRepositoryExtendedInterface::class, ProductsRepository::class);
-        $this->app->bind(BranchRepositoryExtendedInterface::class, BrancRepository::class);
+        $this->app->bind(BranchRepositoryExtendedInterface::class, BranchRepository::class);
         $this->app->bind(CompanyRepositoryExtendedInterface::class, CompanyRepository::class);
         $this->app->bind(InventaryRepositoryExtendedInterface::class, InventaryRepository::class);
 

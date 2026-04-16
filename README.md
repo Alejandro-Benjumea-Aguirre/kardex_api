@@ -414,6 +414,84 @@ Busca el barcode por código y retorna la variante y el producto asociado. Útil
 
 ---
 
+### Inventario (`/inventary`) — Requiere JWT
+
+| Método | Endpoint | Descripción | Permiso |
+|---|---|---|---|
+| `GET` | `/inventary` | Listar inventario paginado | `inventary:read` |
+| `POST` | `/inventary` | Crear registro de inventario | `inventary:create` |
+| `GET` | `/inventary/{id}` | Ver registro de inventario | `inventary:read` |
+| `PUT` | `/inventary/{id}` | Actualizar stock mínimo/máximo/ubicación | `inventary:update` |
+| `DELETE` | `/inventary/{id}` | Desactivar registro de inventario | `inventary:delete` |
+| `POST` | `/inventary/{id}/activate` | Activar registro de inventario | `inventary:update` |
+
+#### Query params para `GET /inventary`
+| Param | Tipo | Descripción |
+|---|---|---|
+| `search` | string | Búsqueda por nombre o SKU de variante |
+| `is_active` | boolean | Filtrar por estado |
+| `per_page` | integer | Resultados por página (default: 20) |
+
+#### `POST /inventary`
+```json
+{
+  "branch_id": "uuid-de-la-sucursal",
+  "product_variant_id": "uuid-de-la-variante",
+  "quantity": 100.000,
+  "min_stock": 10.000,
+  "max_stock": 200.000,
+  "avg_cost": 1500.0000,
+  "location": "A3-2",
+  "notes": "Stock inicial de apertura"
+}
+```
+
+> **Nota:** La combinación `branch_id` + `product_variant_id` debe ser única. La `quantity` no se puede actualizar directamente — los cambios de stock se realizan mediante movimientos de stock (`stock_movements`). Se crea automáticamente un movimiento de tipo `initial` al crear el registro.
+
+#### `PUT /inventary/{id}`
+```json
+{
+  "min_stock": 15.000,
+  "max_stock": 250.000,
+  "avg_cost": 1600.0000,
+  "location": "B1-5"
+}
+```
+
+---
+
+### Países (`/country`) — Requiere JWT
+
+| Método | Endpoint | Descripción | Auth |
+|---|---|---|---|
+| `GET` | `/country` | Listar países paginados | Si |
+| `GET` | `/country/{id}` | Ver país | Si |
+
+#### Query params para `GET /country`
+| Param | Tipo | Descripción |
+|---|---|---|
+| `search` | string | Búsqueda por nombre |
+| `is_active` | boolean | Filtrar por estado |
+| `per_page` | integer | Resultados por página (default: 20) |
+
+---
+
+### Ciudades (`/city`) — Requiere JWT
+
+| Método | Endpoint | Descripción | Auth |
+|---|---|---|---|
+| `GET` | `/city` | Listar ciudades paginadas | Si |
+| `GET` | `/city/{id}` | Ver ciudad | Si |
+
+#### Query params para `GET /city`
+| Param | Tipo | Descripción |
+|---|---|---|
+| `search` | string | Búsqueda por nombre |
+| `is_active` | boolean | Filtrar por estado |
+| `per_page` | integer | Resultados por página (default: 20) |
+
+---
+
 ## Formato de respuestas
 
 ### Éxito
@@ -516,5 +594,6 @@ Los permisos siguen el patrón `modulo:accion`:
 | `branch` | `read`, `create`, `update`, `delete` |
 | `category` | `read`, `create`, `update`, `delete` |
 | `products` | `read`, `create`, `update`, `delete` |
+| `inventary` | `read`, `create`, `update`, `delete` |
 
 > Los usuarios con el permiso `system:manage` tienen acceso completo a todos los endpoints.

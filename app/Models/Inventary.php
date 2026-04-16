@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Inventory extends Model
+class Inventary extends Model
 {
     use HasFactory, HasUuids;
 
@@ -23,6 +23,7 @@ class Inventory extends Model
         'max_stock',
         'location',
         'avg_cost',
+        'is_active',
     ];
 
     protected function casts(): array
@@ -32,6 +33,7 @@ class Inventory extends Model
             'min_stock' => 'decimal:3',
             'max_stock' => 'decimal:3',
             'avg_cost'  => 'decimal:4',
+            'is_active' => 'boolean',
         ];
     }
 

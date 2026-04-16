@@ -52,7 +52,7 @@ class InventaryController extends Controller
     public function store(CreateInventaryRequest $request, CreateInventaryAction $action): JsonResponse
     {
         try {
-            $inventary = $action(CreateInventaryData::from($request), $request->inventary());
+            $inventary = $action(CreateInventaryData::from($request));
 
             return response()->json([
                 'success' => true,
@@ -96,7 +96,7 @@ class InventaryController extends Controller
         }
 
         try {
-            $updated = $action($inventary, UpdateInventaryData::from($request), $request->inventary());
+            $updated = $action($inventary, UpdateInventaryData::from($request));
 
             return response()->json([
                 'success' => true,
@@ -112,7 +112,7 @@ class InventaryController extends Controller
     // DELETE /inventary/{inventary}  → desactivar (soft)
     public function destroy(
         string                     $inventaryId,
-        DeactivateInventaryhAction $action,
+        DeactivateInventaryAction $action,
         Request                    $request,
     ): JsonResponse {
         $inventary = $this->inventaryRepository->findById($inventaryId);
@@ -122,7 +122,7 @@ class InventaryController extends Controller
         }
 
         try {
-            $action($inventary, $request->inventary());
+            $action($inventary);
 
             return response()->json([
                 'success' => true,
@@ -140,7 +140,7 @@ class InventaryController extends Controller
     // POST /inventary/{inventary}/activate
     public function activate(
         string                  $inventaryId,
-        ActivateinventaryAction $action,
+        ActivateInventaryAction $action,
     ): JsonResponse {
         $inventary = $this->inventaryRepository->findById($inventaryId);
 

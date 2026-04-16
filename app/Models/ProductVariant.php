@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProductVariant extends Model
 {
@@ -56,9 +57,9 @@ class ProductVariant extends Model
         return $this->hasMany(Barcode::class, 'product_variant_id');
     }
 
-    public function primaryBarcode(): HasMany
+    public function primaryBarcode(): HasOne
     {
-        return $this->hasMany(Barcode::class, 'product_variant_id')
+        return $this->hasOne(Barcode::class, 'product_variant_id')
                     ->where('is_primary', true);
     }
 

@@ -650,7 +650,7 @@
 
     <!-- ── Sucursales ── -->
     <div class="endpoint-group">
-      <div class="endpoint-group-title">🏢 Sucursales <span class="new-badge">NUEVO</span></div>
+      <div class="endpoint-group-title">🏢 Sucursales</div>
       <div class="endpoints-grid">
 
         <div class="endpoint-card">
@@ -836,7 +836,7 @@
 
     <!-- ── Variantes de Producto ── -->
     <div class="endpoint-group">
-      <div class="endpoint-group-title">🎨 Variantes de Producto <span class="new-badge">NUEVO</span></div>
+      <div class="endpoint-group-title">🎨 Variantes de Producto</div>
       <div class="endpoints-grid">
 
         <div class="endpoint-card">
@@ -898,7 +898,7 @@
 
     <!-- ── Códigos de Barras ── -->
     <div class="endpoint-group">
-      <div class="endpoint-group-title">📊 Códigos de Barras <span class="new-badge">NUEVO</span></div>
+      <div class="endpoint-group-title">📊 Códigos de Barras</div>
       <div class="endpoints-grid">
 
         <div class="endpoint-card">
@@ -957,6 +957,109 @@
 
       </div>
     </div>
+
+    <!-- ── Inventario ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">📦 Inventario <span class="new-badge">NUEVO</span></div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/inventary</span>
+          </div>
+          <p class="endpoint-desc">Lista el inventario paginado filtrado por búsqueda y estado.</p>
+          <span class="endpoint-permission">🔑 inventary:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/inventary</span>
+          </div>
+          <p class="endpoint-desc">Crea un registro de inventario para una variante en una sucursal. La combinación branch + variante debe ser única.</p>
+          <span class="endpoint-permission">🔑 inventary:create</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/inventary/{id}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle de un registro de inventario con su sucursal y variante.</p>
+          <span class="endpoint-permission">🔑 inventary:read</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/v1/inventary/{id}</span>
+          </div>
+          <p class="endpoint-desc">Actualiza stock mínimo, stock máximo, costo promedio y ubicación física.</p>
+          <span class="endpoint-permission">🔑 inventary:update</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/v1/inventary/{id}</span>
+          </div>
+          <p class="endpoint-desc">Desactiva un registro de inventario (soft delete).</p>
+          <span class="endpoint-permission">🔑 inventary:delete</span>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/inventary/{id}/activate</span>
+          </div>
+          <p class="endpoint-desc">Reactiva un registro de inventario previamente desactivado.</p>
+          <span class="endpoint-permission">🔑 inventary:update</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Países y Ciudades ── -->
+    <div class="endpoint-group">
+      <div class="endpoint-group-title">🌎 Países &amp; Ciudades <span class="new-badge">NUEVO</span></div>
+      <div class="endpoints-grid">
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/country</span>
+          </div>
+          <p class="endpoint-desc">Lista países paginados con filtro por nombre y estado.</p>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/country/{id}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle de un país.</p>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/city</span>
+          </div>
+          <p class="endpoint-desc">Lista ciudades paginadas con filtro por nombre y estado.</p>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/city/{id}</span>
+          </div>
+          <p class="endpoint-desc">Devuelve el detalle de una ciudad.</p>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
