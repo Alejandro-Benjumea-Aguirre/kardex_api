@@ -28,8 +28,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(CategoryRepositoryExtendedInterface::class, CategoryRepository::class);
         $this->app->bind(ProductsRepositoryExtendedInterface::class, ProductsRepository::class);
-        $this->app->bind(BranchRepositoryExtendedInterface::class, ProductsRepository::class);
-        $this->app->bind(CompanyRepositoryExtendedInterface::class, ProductsRepository::class);
+        $this->app->bind(BranchRepositoryExtendedInterface::class, BrancRepository::class);
+        $this->app->bind(CompanyRepositoryExtendedInterface::class, CompanyRepository::class);
+        $this->app->bind(InventaryRepositoryExtendedInterface::class, InventaryRepository::class);
 
         $this->app->singleton(TokenService::class, function ($app) {
             return new TokenService(

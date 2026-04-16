@@ -6,16 +6,16 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\{JsonResponse, Request};
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Branch\{
+use App\Http\Requests\Branches\{
     CreateBranchRequest, UpdateBranchRequest
 };
 use App\Http\Resources\BranchResource;
-use App\Data\Users\{CreateBranchData, UpdateBranchData};
-use App\Actions\Branch\{
+use App\Data\Branches\{CreateBranchData, UpdateBranchData};
+use App\Actions\Branches\{
     CreateBranchAction, UpdateBranchAction, DeactivateBranchAction, ActivateBranchAction
 };
 use App\Repositories\Interfaces\BranchRepositoryExtendedInterface;
-use App\Exceptions\Branch\BranchException;
+use App\Exceptions\Branches\BranchException;
 
 class BranchController extends Controller
 {

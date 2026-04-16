@@ -18,6 +18,13 @@ class Company extends Model
 
     protected $fillable = [
         'name',
+        'nit',
+        'sector',
+        'phone',
+        'address',
+        'city',
+        'country',
+        'website',
         'slug',
         'plan',
         'plan_limits',
