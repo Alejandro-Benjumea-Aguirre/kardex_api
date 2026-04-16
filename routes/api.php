@@ -11,7 +11,8 @@ use App\Http\Controllers\Api\V1\{
     ProductsController,
     ProductVariantController,
     BarcodeController,
-	BranchController
+	BranchController,
+	CountryCitysController
 };
 
 Route::prefix('v1')->group(function () {
@@ -330,6 +331,67 @@ Route::prefix('v1')->group(function () {
 		Route::get('/{category}/products', [ProductsController::class, 'byCategory'])
 					->middleware('permission:products:read')
 					->name('by-category');
+	});
+
+	// ══════════════════════════════════════════════════════
+	// Inventario
+	// ══════════════════════════════════════════════════════
+
+	Route::middleware('auth.jwt')->prefix('inventary')->name('inventary.')->group(function () {
+
+		Route::get('/', [InventaryController::class, 'index'])
+					->middleware('permission:inventary:read')
+					->name('index');
+
+		Route::post('/', [InventaryController::class, 'store'])
+					->middleware('permission:inventary:create')
+					->name('store');
+
+		Route::prefix('{category}')->group(function () {
+
+			Route::get('/', [InventaryController::class, 'show'])
+						->middleware('permission:inventary:read')
+						->name('show');
+
+			Route::put('/', [InventaryController::class, 'update'])
+						->middleware('permission:inventary:update')
+						->name('update');
+
+			Route::delete('/', [InventaryController::class, 'destroy'])
+						->middleware('permission:inventary:delete')
+						->name('destroy');
+
+			Route::post('/activate', [InventaryController::class, 'activate'])
+						->middleware('permission:inventary:update')
+						->name('activate');
+
+		});
+	});
+
+	Route::middleware('auth.jwt')->prefix('country')->name('country.')->group(function () {
+
+		Route::get('/', [CountryCitysController::class, 'indexCountry'])
+					->name('indexCountry');
+
+		Route::prefix('{country}')->group(function () {
+
+			Route::get('/', [CountryCitysController::class, 'showCountry'])
+						->name('showCountry');
+
+		});
+	});
+
+	Route::middleware('auth.jwt')->prefix('city')->name('city.')->group(function () {
+
+		Route::get('/', [CountryCitysController::class, 'indexCity'])
+					->name('indexCity');
+
+		Route::prefix('{city}')->group(function () {
+
+			Route::get('/', [CountryCitysController::class, 'showCity'])
+						->name('showCity');
+
+		});
 	});
 
 });
