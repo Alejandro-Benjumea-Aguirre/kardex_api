@@ -17,6 +17,51 @@ return new class extends Migration
     {
         DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 
+        // ─── TABLA PAÍSES ──────────────────────────────────────
+        Schema::create('countries', function (Blueprint $table) {
+
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+
+            $table->string('name', 100);
+            $table->string('native_name', 100)->nullable();
+            $table->string('iso2', 2)->unique();
+            $table->string('iso3', 3)->unique();
+            $table->string('phone_code', 10);
+            $table->string('capital', 100)->nullable();
+            $table->string('currency', 3)->nullable();
+            $table->string('currency_symbol', 10)->nullable();
+            $table->string('region', 50)->nullable();
+            $table->string('subregion', 100)->nullable();
+            $table->string('flag', 10)->nullable();
+            $table->boolean('is_active')->default(true);
+
+            $table->timestampsTz();
+        });
+
+        // ─── TABLA CIUDADES ──────────────────────────────────────
+        Schema::create('cities', function (Blueprint $table) {
+
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
+
+            $table->foreignUuid('country_id')
+                  ->constrained('countries')
+                  ->cascadeOnDelete();
+
+            $table->string('name', 100);
+            $table->string('dane_code', 10)->nullable()->unique();
+            $table->string('department', 100)->nullable();
+            $table->string('department_code', 5)->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->boolean('is_active')->default(true)->index();
+
+            $table->timestampsTz();
+
+            $table->index(['country_id', 'is_active']);
+            $table->index('department_code');
+            $table->index('dane_code');
+        });
+
         Schema::create('companies', function (Blueprint $table) {
 
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
@@ -37,10 +82,16 @@ return new class extends Migration
             $table->string('address', 50);
 
             // ─── CIUDAD ──────────────────────────────────────────
-            $table->unsignedInteger('city');
+            $table->foreignUuid('city_id')
+                  ->nullable()
+                  ->constrained('cities')
+                  ->nullOnDelete();
 
             // ─── PAÍS ────────────────────────────────────────────
-            $table->unsignedInteger('country');
+            $table->foreignUuid('country_id')
+                  ->nullable()
+                  ->constrained('countries')
+                  ->nullOnDelete();
                                                        
             // ─── SITIO WEB ───────────────────────────────────────
             $table->string('website', 100)->nullable();
@@ -79,71 +130,12 @@ return new class extends Migration
             $table->softDeletesTz();
         });
 
-        // ─── TABLA PAISES ──────────────────────────────────────
-        //
-        Schema::create('countries', function (Blueprint $table) {
-
-            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-
-            $table->string('name', 100);                // "Colombia"
-            $table->string('native_name', 100)->nullable(); // "Colombia" en idioma nativo
-            $table->string('iso2', 2)->unique();         // "CO"
-            $table->string('iso3', 3)->unique();         // "COL"
-            $table->string('phone_code', 10);            // "+57"
-            $table->string('capital', 100)->nullable();  // "Bogotá"
-            $table->string('currency', 3)->nullable();   // "COP"
-            $table->string('currency_symbol', 10)->nullable(); // "$"
-            $table->string('region', 50)->nullable();    // "Americas"
-            $table->string('subregion', 100)->nullable();// "South America"
-            $table->string('flag', 10)->nullable();      // "🇨🇴"
-            $table->boolean('is_active')->default(true);
-
-            $table->timestampsTz();
-        });
-    
-        // ─── TABLA Ciudades ──────────────────────────────────────
-        //
-        Schema::create('cities', function (Blueprint $table) {
-
-            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-
-            // ─── RELACIÓN CON PAÍS ────────────────────────────
-            $table->foreignUuid('country_id')
-                  ->constrained('countries')
-                  ->cascadeOnDelete();
-
-            // ─── DATOS BÁSICOS ────────────────────────────────
-            $table->string('name', 100);
-
-            // ─── CÓDIGO DANE ──────────────────────────────────
-            // Código oficial del DANE para municipios colombianos
-            // Ej: Bogotá = 11001, Medellín = 05001
-            $table->string('dane_code', 10)->nullable()->unique();
-
-            // ─── DEPARTAMENTO ─────────────────────────────────
-            $table->string('department', 100)->nullable();        // "Cundinamarca"
-            $table->string('department_code', 5)->nullable();     // "11"
-
-            // ─── DATOS GEOGRÁFICOS ────────────────────────────
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
-
-            // ─── ESTADO ──────────────────────────────────────
-            $table->boolean('is_active')->default(true)->index();
-
-            $table->timestampsTz();
-
-            // ─── ÍNDICES ─────────────────────────────────────
-            $table->index(['country_id', 'is_active']);
-            $table->index('department_code');
-            $table->index('dane_code');
-        });
-
     }
 
     public function down(): void
     {
-        // down() revierte exactamente lo que hizo up()
         Schema::dropIfExists('companies');
+        Schema::dropIfExists('cities');
+        Schema::dropIfExists('countries');
     }
 };

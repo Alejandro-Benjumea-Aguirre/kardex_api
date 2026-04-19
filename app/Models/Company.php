@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
@@ -22,8 +23,8 @@ class Company extends Model
         'sector',
         'phone',
         'address',
-        'city',
-        'country',
+        'city_id',
+        'country_id',
         'website',
         'slug',
         'plan',
@@ -70,6 +71,16 @@ class Company extends Model
     // ═══════════════════════════════════════════════════════
     // RELACIONES
     // ═══════════════════════════════════════════════════════
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
 
     public function users(): HasMany
     {

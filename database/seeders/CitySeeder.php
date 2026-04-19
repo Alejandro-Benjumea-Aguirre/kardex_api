@@ -26,7 +26,7 @@ class CitySeeder extends Seeder
         $cities = $this->getCities($colombia->id);
 
         collect($cities)->chunk(100)->each(function ($chunk) {
-            DB::table('cities')->insert($chunk->toArray());
+            DB::table('cities')->insertOrIgnore($chunk->toArray());
         });
 
         $this->command->info('✅ ' . count($cities) . ' municipios de Colombia cargados correctamente.');

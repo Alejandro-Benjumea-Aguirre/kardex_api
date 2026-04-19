@@ -29,11 +29,17 @@ return new class extends Migration
             $table->string('code', 20);
 
             // ─── DIRECCIÓN ───────────────────────────────────
-            // 
             $table->string('address', 255)->nullable();
-            $table->string('city', 100)->nullable();
-            $table->string('state', 100)->nullable();
-            $table->string('country', 2)->default('CO'); // ISO 3166-1 alpha-2
+
+            $table->foreignUuid('city_id')
+                  ->nullable()
+                  ->constrained('cities')
+                  ->nullOnDelete();
+
+            $table->foreignUuid('country_id')
+                  ->nullable()
+                  ->constrained('countries')
+                  ->nullOnDelete();
 
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();  // 11 porque longitude va -180 a 180

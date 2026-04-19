@@ -57,12 +57,12 @@ class AuthController extends Controller
     public function register(RegisterRequest $request, RegisterAction $action): JsonResponse
     {
         try {
-            $user = $action(RegisterData::from($request)->user);
+            $result = $action(RegisterData::fromRequest($request->all()));
 
             return response()->json([
                 'success' => true,
-                'message' => 'Registro exitoso. Revisá tu email para verificar tu cuenta.',
-                'data'    => new UserResource($user),
+                'message' => 'Registro exitoso.',
+                'data'    => new UserResource($result['user']),
             ], 201);
 
         } catch (AuthException $e) {

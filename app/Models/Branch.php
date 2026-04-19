@@ -20,9 +20,8 @@ class Branch extends Model
         'name',
         'code',
         'address',
-        'city',
-        'state',
-        'country',
+        'city_id',
+        'country_id',
         'latitude',
         'longitude',
         'phone',
@@ -45,6 +44,16 @@ class Branch extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     public function users(): BelongsToMany
