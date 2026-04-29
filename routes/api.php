@@ -11,8 +11,9 @@ use App\Http\Controllers\Api\V1\{
     ProductsController,
     ProductVariantController,
     BarcodeController,
-	BranchController,
-	CountryCitysController
+    BranchController,
+    CountryCitysController,
+    InventaryController,
 };
 
 Route::prefix('v1')->group(function () {
