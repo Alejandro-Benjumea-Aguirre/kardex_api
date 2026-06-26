@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Branch;
+namespace App\Actions\Branches;
 
 use App\Models\Branch;
 use App\Repositories\Interfaces\BranchRepositoryExtendedInterface;

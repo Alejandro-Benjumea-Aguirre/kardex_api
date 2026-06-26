@@ -6,7 +6,7 @@ declare(strict_types=1);
 // EXCEPCIONES
 // ─────────────────────────────────────────────────────────
 
-namespace App\Exceptions\Category;
+namespace App\Exceptions\Categories;
 
 class CategoryException extends \RuntimeException
 {

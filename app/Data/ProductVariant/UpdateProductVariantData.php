@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Data\ProductVariants;
+namespace App\Data\ProductVariant;
 
 use Spatie\LaravelData\Data;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Category;
+namespace App\Actions\Categories;
 
 use App\Models\Category;
 use App\Repositories\Interfaces\{CategoryRepositoryExtendedInterface, RoleRepositoryInterface};
-use App\Exceptions\Category\CategoryNotFoundException;
+use App\Exceptions\Categories\CategoryNotFoundException;
 use App\Exceptions\Roles\{RoleNotFoundException, CannotModifySystemRoleException, CategoryAlreadyHasRoleException};
 
 // ═══════════════════════════════════════════════════════════

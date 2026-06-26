@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\ProductVariants;
+namespace App\Actions\ProductVariant;
 
 use App\Models\ProductVariant;
 use App\Repositories\ProductVariants\ProductVariantRepository;

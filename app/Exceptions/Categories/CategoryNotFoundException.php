@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions\Category;
+namespace App\Exceptions\Categories;
 
 class CategoryNotFoundException extends CategoryException
 {

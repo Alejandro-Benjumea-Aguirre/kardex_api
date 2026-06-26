@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Category;
+namespace App\Data\Categories;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;

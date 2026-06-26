@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Branch;
+namespace App\Data\Branches;
 
 use Spatie\LaravelData\Data;
 

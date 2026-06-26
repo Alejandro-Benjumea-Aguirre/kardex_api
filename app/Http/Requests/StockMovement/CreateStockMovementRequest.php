@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Inventory;
+namespace App\Http\Requests\StockMovement;
 
 use Illuminate\Validation\Rule;
 

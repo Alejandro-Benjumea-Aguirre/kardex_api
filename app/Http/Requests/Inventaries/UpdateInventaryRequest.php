@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Inventory;
+namespace App\Http\Requests\Inventaries;
 
-class UpdateInventoryRequest extends \App\Http\Requests\ApiFormRequest
+class UpdateInventaryRequest extends \App\Http\Requests\ApiFormRequest
 {
     public function rules(): array
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Category;
+namespace App\Http\Requests\Categories;
 
 class CreateCategoryRequest extends \App\Http\Requests\ApiFormRequest
 {

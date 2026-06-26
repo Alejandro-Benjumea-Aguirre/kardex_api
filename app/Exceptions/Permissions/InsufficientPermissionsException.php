@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-class InsufficientPermissionsException extends UsersException
+namespace App\Exceptions\Permissions;
+
+class InsufficientPermissionsException extends \RuntimeException
 {
     public function __construct(string $permission)
     { parent::__construct("No tenés el permiso requerido: {$permission}"); }

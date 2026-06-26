@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Category;
+namespace App\Actions\Categories;
 
-use App\Data\Category\UpdateCategoryData;
+use App\Data\Categories\UpdateCategoryData;
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryExtendedInterface;
 

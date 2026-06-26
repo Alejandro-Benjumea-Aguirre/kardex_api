@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Data\Category;
+namespace App\Data\Inventaries;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
 // ─── UpdateUserData ─────────────────────────────────────────
 
-class UpdateCategoryData extends Data
+class UpdateInventaryData extends Data
 {
     public function __construct(
         public readonly decimal|Optional          $quantity = new Optional(),

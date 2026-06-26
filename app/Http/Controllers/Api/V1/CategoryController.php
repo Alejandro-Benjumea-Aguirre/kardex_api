@@ -7,16 +7,16 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\{JsonResponse, Request};
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\Category\{
+use App\Http\Requests\Categories\{
     CreateCategoryRequest, UpdateCategoryRequest
 };
 use App\Http\Resources\CategoryResource;
-use App\Data\Category\{CreateCategoryData, UpdateCategoryData};
-use App\Actions\Category\{
+use App\Data\Categories\{CreateCategoryData, UpdateCategoryData};
+use App\Actions\Categories\{
     CreateCategoryAction, UpdateCategoryAction, DeactivateCategoryAction, ActivateCategoryAction
 };
 use App\Repositories\Interfaces\CategoryRepositoryExtendedInterface;
-use App\Exceptions\Category\CategoryException;
+use App\Exceptions\Categories\CategoryException;
 
 
 class CategoryController extends Controller

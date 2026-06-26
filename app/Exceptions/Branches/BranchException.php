@@ -6,7 +6,7 @@ declare(strict_types=1);
 // EXCEPCIONES
 // ─────────────────────────────────────────────────────────
 
-namespace App\Exceptions\Branch;
+namespace App\Exceptions\Branches;
 
 class BranchException extends \RuntimeException
 {

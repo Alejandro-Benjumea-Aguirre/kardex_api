@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions\Branch;
+namespace App\Exceptions\Branches;
 
 class BranchNotFoundException extends BranchException
 {
