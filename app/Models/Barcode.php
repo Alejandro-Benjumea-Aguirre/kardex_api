@@ -1,4 +1,3 @@
-// app/Models/Barcode.php
 <?php
 
 declare(strict_types=1);

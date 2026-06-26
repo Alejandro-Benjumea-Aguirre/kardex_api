@@ -1,4 +1,3 @@
-// app/Data/Products/ProductData.php
 <?php
 
 namespace App\Data\Products;
@@ -10,10 +9,11 @@ use Spatie\LaravelData\Attributes\Validation\Rule;
 class CreateProductsData extends Data
 {
     public function __construct(
+        public readonly string  $company_id,
         public readonly string  $name,
-        public readonly string  $category_id,
         public readonly float   $sale_price,
         public readonly float   $cost_price,
+        public readonly ?string $category_id      = null,
         public readonly ?float  $min_price        = null,
         public readonly ?string $sku              = null,
         public readonly ?string $slug             = null,

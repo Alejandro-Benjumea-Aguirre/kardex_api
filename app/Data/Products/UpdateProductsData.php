@@ -1,4 +1,3 @@
-// app/Data/Products/ProductData.php
 <?php
 
 namespace App\Data\Products;

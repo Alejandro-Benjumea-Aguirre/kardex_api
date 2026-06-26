@@ -20,11 +20,11 @@ class CreateProductsAction
         $slug = $data->slug ?? Str::slug($data->name);
         $sku  = $data->sku  ?? $this->generateSku($data->name);
 
-        return $this->productsRepository->create([
+        return $this->productsRepository->create(array_filter([
             ...$data->toArray(),
             'slug' => $slug,
             'sku'  => $sku,
-        ]);
+        ], fn($v) => $v !== null));
     }
 
     private function generateSku(string $name): string

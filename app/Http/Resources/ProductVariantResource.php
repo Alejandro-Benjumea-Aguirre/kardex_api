@@ -1,4 +1,3 @@
-// app/Http/Resources/ProductVariants/ProductVariantResource.php
 <?php
 
 declare(strict_types=1);

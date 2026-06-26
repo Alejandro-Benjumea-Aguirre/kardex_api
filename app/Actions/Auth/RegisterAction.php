@@ -47,7 +47,10 @@ class RegisterAction
                 'is_email_verified' => true,
             ]);
 
-            $user->assignRole('admin');
+            $adminRole = \App\Models\Role::where('name', 'admin')->first();
+            if ($adminRole) {
+                $user->roles()->attach($adminRole->id);
+            }
 
             $token = auth()->login($user);
 

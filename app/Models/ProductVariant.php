@@ -1,4 +1,3 @@
-// app/Models/ProductVariant.php
 <?php
 
 declare(strict_types=1);

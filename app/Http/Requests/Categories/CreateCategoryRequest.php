@@ -9,12 +9,12 @@ class CreateCategoryRequest extends \App\Http\Requests\ApiFormRequest
 	public function rules(): array
 	{
 		return [
-			'company_id'    => ['nullable', 'uuid', 'exists:company,id'],
-			'parent_id'     => ['nullable', 'uuid', 'exists:category,id'],
+			'company_id'    => ['nullable', 'uuid', 'exists:companies,id'],
+			'parent_id'     => ['nullable', 'uuid', 'exists:categories,id'],
 			'name'          => ['required', 'string', 'max:50'],
 			'slug'          => ['required'],
 			'description'   => ['required', 'string', 'max:500'],
-			'image_url'     => ['nullable', 'string', 'max:50'],
+			'image_url'     => ['nullable', 'string', 'max:500'],
 		];
 	}
 

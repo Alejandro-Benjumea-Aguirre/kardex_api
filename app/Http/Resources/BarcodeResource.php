@@ -1,4 +1,3 @@
-// app/Http/Resources/Barcodes/BarcodeResource.php
 <?php
 
 declare(strict_types=1);

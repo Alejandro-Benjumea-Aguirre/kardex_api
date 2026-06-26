@@ -9,23 +9,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'company_id',
         'name',
+        'slug',
         'description',
         'image_url',
         'is_active',
         'parent_id',
-    ];
-
-    protected $hidden = [
-        'deleted_at',
     ];
 
     protected function casts(): array

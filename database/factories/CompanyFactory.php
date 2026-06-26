@@ -16,6 +16,10 @@ class CompanyFactory extends Factory
 
         return [
             'name'      => $name,
+            'nit'       => fake()->unique()->numerify('##########-#'),
+            'sector'    => fake()->numberBetween(1, 10),
+            'phone'     => fake()->numerify('###########'),
+            'address'   => fake()->streetAddress(),
             'slug'      => Str::slug($name) . '-' . fake()->unique()->numerify('###'),
             'is_active' => true,
         ];

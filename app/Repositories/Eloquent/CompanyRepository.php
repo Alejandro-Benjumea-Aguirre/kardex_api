@@ -6,9 +6,10 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Company;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Repositories\Interfaces\CompanyRepositoryExtendedInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-class CompanyRepository implements CompanyRepositoryInterface
+class CompanyRepository implements CompanyRepositoryInterface, CompanyRepositoryExtendedInterface
 {
     // ─── BÚSQUEDAS ───────────────────────────────────────
 

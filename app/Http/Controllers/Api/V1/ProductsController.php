@@ -52,7 +52,10 @@ class ProductsController extends Controller
     public function store(CreateProductsRequest $request, CreateProductsAction $action): JsonResponse
     {
         try {
-            $product = $action(CreateProductsData::from($request));
+            $product = $action(CreateProductsData::from([
+                ...$request->validated(),
+                'company_id' => $request->user()->company_id,
+            ]));
 
             return response()->json([
                 'success' => true,

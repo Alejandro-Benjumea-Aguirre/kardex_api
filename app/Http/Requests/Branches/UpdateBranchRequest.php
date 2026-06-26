@@ -11,7 +11,8 @@ class UpdateBranchRequest extends \App\Http\Requests\ApiFormRequest
     public function rules(): array
     {
         $branchId  = $this->route('branch');
-        $companyId = $this->input('company_id') ?? $this->route('branch')?->company_id;
+        $branch    = is_string($branchId) ? \App\Models\Branch::find($branchId) : $branchId;
+        $companyId = $this->input('company_id') ?? $branch?->company_id;
 
         return [
             // ─── DATOS BÁSICOS ────────────────────────────
