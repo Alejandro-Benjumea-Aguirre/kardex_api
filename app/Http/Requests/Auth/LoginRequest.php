@@ -23,4 +23,13 @@ class LoginRequest extends ApiFormRequest
             'branch_id' => ['nullable', 'string'],
         ];
     }
+
+        public function messages(): array
+    {
+        return [
+            'email.required'    => 'El correo electrónico es obligatorio.',
+            'email.email'       => 'El correo electrónico no es válido.',
+            'password.required'  => 'La contraseña es obligatoria.',
+        ];
+    }
 }

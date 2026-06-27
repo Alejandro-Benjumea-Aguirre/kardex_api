@@ -10,12 +10,24 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends ApiFormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        if ($this->filled('company.website') && !preg_match('~^https?://~i', $this->input('company.website'))) {
+            $this->merge([
+                'company' => array_merge($this->input('company', []), [
+                    'website' => 'https://' . $this->input('company.website'),
+                ]),
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
             // ─── Empresa ─────────────────────────────────
             'company.name'       => ['required', 'string', 'max:100'],
-            'company.nit'        => ['required', 'string', 'max:50'],
+            'company.nit'        => ['required', 'string', 'max:50', 'unique:companies,nit'],
             'company.sector'     => ['required', 'string', 'max:100'],
             'company.phone'      => ['required', 'string', 'max:30'],
             'company.address'    => ['required', 'string', 'max:255'],
@@ -41,6 +53,7 @@ class RegisterRequest extends ApiFormRequest
             // Empresa
             'company.name.required'    => 'El nombre de la empresa es obligatorio.',
             'company.nit.required'     => 'El NIT / RUC es obligatorio.',
+            'company.nit.unique'       => 'Este NIT / RUC ya está registrado.',
             'company.sector.required'  => 'El sector es obligatorio.',
             'company.phone.required'   => 'El teléfono es obligatorio.',
             'company.address.required' => 'La dirección es obligatoria.',
@@ -55,4 +68,5 @@ class RegisterRequest extends ApiFormRequest
             'user.password.confirmed'  => 'Las contraseñas no coinciden.',
         ];
     }
+
 }

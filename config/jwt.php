@@ -16,5 +16,8 @@ return [
     */
 
     'secret' => env('JWT_SECRET'),
+    'ttl_minutes' => env('JWT_TTL_MINUTES'),
+    'ttl_days' => env('JWT_TTL_DAYS'),
+    'algorithm' => env('JWT_ALGORITHM'),
 
 ];

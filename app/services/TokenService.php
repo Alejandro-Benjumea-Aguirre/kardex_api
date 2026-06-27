@@ -18,15 +18,13 @@ use App\Exceptions\Auth\TokenInvalidException;
 
 class TokenService
 {
-    private const ACCESS_TOKEN_TTL_MINUTES  = 15;
-
-    private const REFRESH_TOKEN_TTL_DAYS    = 30;
-
-    private const ALGORITHM = 'HS256';
 
     public function __construct(
         private readonly string $secret,
         private readonly string $appName,
+        private readonly int $ttl_minutes,
+        private readonly int $ttl_days,
+        private readonly string $algorithm,
     ) {}
 
     // ═══════════════════════════════════════════════════════
@@ -38,35 +36,29 @@ class TokenService
         $now = time();
 
         $payload = [
-            // CLAIMS ESTÁNDAR (RFC 7519):
 
             'iss' => $this->appName,
 
             'sub' => $user->id,
 
             'iat' => $now,
-            'exp' => $now + (self::ACCESS_TOKEN_TTL_MINUTES * 60),
+            'exp' => $now + ($this->ttl_minutes * 60),
 
             'jti' => \Str::uuid()->toString(),
 
-            // CLAIMS PRIVADOS (propios del sistema):
             'company_id' => $user->company_id,
             'branch_id'  => $branchId,
             'permissions' => $user->getCachedPermissions($branchId),
         ];
 
-        return JWT::encode($payload, $this->secret, self::ALGORITHM);
+        return JWT::encode($payload, $this->secret, $this->algorithm);
     }
 
-    /**
-     * Genera el refresh token — un string aleatorio opaco.
-     * Se guarda en Redis asociado al usuario.
-     */
     public function generateRefreshToken(User $user, string $branchId): string
     {
         $token = bin2hex(random_bytes(64));
 
-        $ttl = now()->addDays(self::REFRESH_TOKEN_TTL_DAYS);
+        $ttl = now()->addDays($this->ttl_days);
 
         $data = [
             'user_id'    => $user->id,
@@ -171,7 +163,7 @@ class TokenService
         cache()->put(
             "user_invalidated_at:{$userId}",
             time(),
-            now()->addMinutes(self::ACCESS_TOKEN_TTL_MINUTES)
+            now()->addMinutes($this->ttl_minutes)
         );
     }
 

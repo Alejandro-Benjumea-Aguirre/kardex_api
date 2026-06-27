@@ -42,6 +42,9 @@ class RepositoryServiceProvider extends ServiceProvider
             return new TokenService(
                 secret:  config('jwt.secret'),
                 appName: config('app.name'),
+                ttl_minutes: (int) config('jwt.ttl_minutes', 15),
+                ttl_days: (int) config('jwt.ttl_days', 7),
+                algorithm: config('jwt.algorithm'),
             );
         });
     }
