@@ -92,7 +92,7 @@ class TokenService
     public function validateAccessToken(string $token): object
     {
         try {
-            $payload = JWT::decode($token, new Key($this->secret, self::ALGORITHM));
+            $payload = JWT::decode($token, new Key($this->secret, $this->algorithm));
         } catch (ExpiredException $e) {
             throw new TokenExpiredException('El token de acceso ha expirado.');
         } catch (SignatureInvalidException $e) {
