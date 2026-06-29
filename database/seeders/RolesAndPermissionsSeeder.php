@@ -83,6 +83,13 @@ class RolesAndPermissionsSeeder extends Seeder
             ['manage', 'Gestionar Configuración', 'Administrar la configuración de la empresa'],
         ],
 
+        'category' => [
+            ['read',   'Ver Categorías',      'Listar y ver detalle de categorías'],
+            ['create', 'Crear Categorías',    'Crear nuevas categorías'],
+            ['update', 'Editar Categorías',   'Modificar categorías existentes'],
+            ['delete', 'Eliminar Categorías', 'Desactivar categorías del sistema'],
+        ],
+
         // Permisos de sistema — solo super_admin
         'system' => [
             ['access', 'Acceso al Sistema', 'Acceder al panel de administración del sistema'],
@@ -120,6 +127,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'users:read',       'users:create',     'users:update',       'users:delete',
                 'users:assign-roles',
                 'roles:read',       'roles:create',     'roles:update',       'roles:delete',
+                'category:read',    'category:create',  'category:update',    'category:delete',
                 'reports:view',     'reports:export',
                 'settings:manage',
                 // NO tiene system:* — eso es solo para super_admin

@@ -185,7 +185,7 @@ El token se obtiene desde `POST /api/v1/auth/login`.
 | `GET` | `/permissions` | Listar todos los permisos | `roles:read` |
 | `GET` | `/permissions/by-module` | Permisos agrupados por módulo | `roles:read` |
 
-**Módulos disponibles:** `products`, `sales`, `inventory`, `purchases`, `customers`, `suppliers`, `users`, `roles`, `reports`, `settings`, `system`
+**Módulos disponibles:** `products`, `sales`, `inventory`, `purchases`, `customers`, `suppliers`, `users`, `roles`, `category`, `reports`, `settings`, `system`
 
 ---
 
@@ -256,9 +256,10 @@ El token se obtiene desde `POST /api/v1/auth/login`.
 | `POST` | `/category` | Crear categoría | `category:create` |
 | `GET` | `/category/{id}` | Ver categoría | `category:read` |
 | `PUT` | `/category/{id}` | Actualizar categoría | `category:update` |
-| `DELETE` | `/category/{id}` | Desactivar categoría | `category:delete` |
-| `POST` | `/category/{id}/activate` | Activar categoría | `category:update` |
+| `PATCH` | `/category/{id}/activate` | Activar o desactivar categoría | `category:update` |
 | `GET` | `/category/{id}/subcategories` | Listar subcategorías | `category:read` |
+
+> El listado retorna las categorías de la empresa del usuario autenticado **más** las categorías globales del sistema (sin `company_id`).
 
 #### Query params para `GET /category`
 | Param | Tipo | Descripción |
@@ -274,9 +275,19 @@ El token se obtiene desde `POST /api/v1/auth/login`.
   "description": "Bebidas frías y calientes",
   "slug": "bebidas",
   "image_url": "https://ejemplo.com/imagen.jpg",
-  "company_id": "uuid-de-la-empresa",
   "parent_id": null
 }
+```
+
+> El `company_id` se toma automáticamente del usuario autenticado, no debe enviarse en el body.
+> El `slug` solo admite letras minúsculas, números y guiones (ej: `mi-categoria`). Máx. 100 caracteres.
+
+#### `PATCH /category/{id}/activate`
+```json
+{ "action": "activate" }
+```
+```json
+{ "action": "deactivate" }
 ```
 
 ---
@@ -289,8 +300,7 @@ El token se obtiene desde `POST /api/v1/auth/login`.
 | `POST` | `/products` | Crear producto | `products:create` |
 | `GET` | `/products/{id}` | Ver producto | `products:read` |
 | `PUT` | `/products/{id}` | Actualizar producto | `products:update` |
-| `DELETE` | `/products/{id}` | Desactivar producto | `products:delete` |
-| `POST` | `/products/{id}/activate` | Activar producto | `products:update` |
+| `PATCH` | `/products/{id}/activate` | Activar o desactivar producto | `products:update` |
 | `GET` | `/products/{categoryId}/products` | Productos por categoría | `products:read` |
 | `GET` | `/products/barcode/scan/{code}` | Buscar por código de barras | `products:read` |
 

@@ -218,6 +218,7 @@
     .method.get    { background: #dcfce7; color: #15803d; }
     .method.post   { background: #dbeafe; color: #1d4ed8; }
     .method.put    { background: #fef9c3; color: #a16207; }
+    .method.patch  { background: #ffedd5; color: #c2410c; }
     .method.delete { background: #fee2e2; color: #b91c1c; }
     .endpoint-path {
       font-family: monospace; font-size: .9rem;
@@ -720,7 +721,7 @@
             <span class="method get">GET</span>
             <span class="endpoint-path">/api/v1/category</span>
           </div>
-          <p class="endpoint-desc">Lista categorías con paginación y filtros de búsqueda.</p>
+          <p class="endpoint-desc">Lista categorías propias de la empresa más las categorías globales del sistema. Soporta paginación y filtros.</p>
           <span class="endpoint-permission">🔑 category:read</span>
         </div>
 
@@ -729,7 +730,7 @@
             <span class="method post">POST</span>
             <span class="endpoint-path">/api/v1/category</span>
           </div>
-          <p class="endpoint-desc">Crea una nueva categoría o subcategoría.</p>
+          <p class="endpoint-desc">Crea una nueva categoría o subcategoría. El <code style="font-size:.82rem;background:#e2e8f0;padding:.1rem .3rem;border-radius:4px">company_id</code> se toma del usuario autenticado.</p>
           <span class="endpoint-permission">🔑 category:create</span>
         </div>
 
@@ -744,15 +745,6 @@
 
         <div class="endpoint-card">
           <div class="endpoint-header">
-            <span class="method delete">DELETE</span>
-            <span class="endpoint-path">/api/v1/category/{id}</span>
-          </div>
-          <p class="endpoint-desc">Desactiva una categoría (soft delete).</p>
-          <span class="endpoint-permission">🔑 category:delete</span>
-        </div>
-
-        <div class="endpoint-card">
-          <div class="endpoint-header">
             <span class="method get">GET</span>
             <span class="endpoint-path">/api/v1/category/{id}/subcategories</span>
           </div>
@@ -762,10 +754,10 @@
 
         <div class="endpoint-card">
           <div class="endpoint-header">
-            <span class="method post">POST</span>
+            <span class="method patch">PATCH</span>
             <span class="endpoint-path">/api/v1/category/{id}/activate</span>
           </div>
-          <p class="endpoint-desc">Reactiva una categoría previamente desactivada.</p>
+          <p class="endpoint-desc">Cambia el estado de una categoría. Enviar <code style="font-size:.82rem;background:#e2e8f0;padding:.1rem .3rem;border-radius:4px">"action": "activate"</code> o <code style="font-size:.82rem;background:#e2e8f0;padding:.1rem .3rem;border-radius:4px">"action": "deactivate"</code>.</p>
           <span class="endpoint-permission">🔑 category:update</span>
         </div>
 
@@ -815,11 +807,11 @@
 
         <div class="endpoint-card">
           <div class="endpoint-header">
-            <span class="method delete">DELETE</span>
-            <span class="endpoint-path">/api/v1/products/{id}</span>
+            <span class="method patch">PATCH</span>
+            <span class="endpoint-path">/api/v1/products/{id}/activate</span>
           </div>
-          <p class="endpoint-desc">Desactiva un producto (soft delete).</p>
-          <span class="endpoint-permission">🔑 products:delete</span>
+          <p class="endpoint-desc">Cambia el estado de un producto. Enviar <code style="font-size:.82rem;background:#e2e8f0;padding:.1rem .3rem;border-radius:4px">"action": "activate"</code> o <code style="font-size:.82rem;background:#e2e8f0;padding:.1rem .3rem;border-radius:4px">"action": "deactivate"</code>.</p>
+          <span class="endpoint-permission">🔑 products:update</span>
         </div>
 
         <div class="endpoint-card">

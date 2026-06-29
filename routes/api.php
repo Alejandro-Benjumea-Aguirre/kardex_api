@@ -218,13 +218,9 @@ Route::prefix('v1')->group(function () {
 						->middleware('permission:category:update')
 						->name('update');
 
-			Route::delete('/', [CategoryController::class, 'destroy'])
-						->middleware('permission:category:delete')
-						->name('destroy');
-
-			Route::post('/activate', [CategoryController::class, 'activate'])
+			Route::patch('/activate', [CategoryController::class, 'changeStatus'])
 						->middleware('permission:category:update')
-						->name('activate');
+						->name('changeStatus');
 
 			Route::get('/subcategories', [CategoryController::class, 'subcategories'])
                     ->middleware('permission:category:read')
@@ -261,13 +257,9 @@ Route::prefix('v1')->group(function () {
 						->middleware('permission:products:update')
 						->name('update');
 
-			Route::delete('/', [ProductsController::class, 'destroy'])
-						->middleware('permission:products:delete')
-						->name('destroy');
-
-			Route::post('/activate', [ProductsController::class, 'activate'])
+			Route::patch('/activate', [ProductsController::class, 'changeStatus'])
 						->middleware('permission:products:update')
-						->name('activate');
+						->name('changeStatus');
 
 			// ── Variantes ─────────────────────────────────
 			Route::prefix('variant')->name('variant.')->group(function () {

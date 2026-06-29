@@ -123,10 +123,12 @@ class ProductsController extends Controller
         }
     }
 
-    // DELETE /products/{product}
-    public function destroy(
-        string                  $product,
-        DeactivateProductsAction $action,
+    // PATCH /products/{product}/activate
+    public function changeStatus(
+        Request                  $request,
+        string                   $product,
+        ActivateProductsAction   $activateAction,
+        DeactivateProductsAction $deactivateAction,
     ): JsonResponse {
         $found = $this->productsRepository->findById($product);
 
@@ -134,38 +136,26 @@ class ProductsController extends Controller
             return response()->json(['success' => false, 'error' => ['code' => 'PRODUCT_NOT_FOUND']], 404);
         }
 
-        try {
-            $action($found);
+        $action = $request->input('action');
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Producto desactivado correctamente.',
-            ]);
-
-        } catch (\DomainException $e) {
+        if (! in_array($action, ['activate', 'deactivate'], true)) {
             return response()->json([
                 'success' => false,
-                'error'   => ['code' => 'DOMAIN_ERROR', 'message' => $e->getMessage()],
+                'error'   => ['code' => 'INVALID_ACTION', 'message' => 'La acción debe ser "activate" o "deactivate".'],
             ], 422);
         }
-    }
 
-    // POST /products/{product}/activate
-    public function activate(
-        string                 $product,
-        ActivateProductsAction $action,
-    ): JsonResponse {
-        $found = $this->productsRepository->findById($product);
-
-        if (! $found) {
-            return response()->json(['success' => false, 'error' => ['code' => 'PRODUCT_NOT_FOUND']], 404);
+        if ($action === 'activate') {
+            $activateAction($found);
+            $message = 'Producto activado correctamente.';
+        } else {
+            $deactivateAction($found);
+            $message = 'Producto desactivado correctamente.';
         }
-
-        $action($found);
 
         return response()->json([
             'success' => true,
-            'message' => 'Producto activado correctamente.',
+            'message' => $message,
         ]);
     }
 

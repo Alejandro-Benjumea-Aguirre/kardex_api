@@ -34,6 +34,7 @@ class CreateProductsRequest extends \App\Http\Requests\ApiFormRequest
                                         'physical',
                                         'service',
                                         'digital',
+                                        'composite',
                                         'other',
                                     ])],
             'has_variants'       => ['nullable', 'boolean'],
@@ -90,7 +91,7 @@ class CreateProductsRequest extends \App\Http\Requests\ApiFormRequest
 
             // type
             'type.required'              => 'El tipo de producto es obligatorio.',
-            'type.in'                    => 'El tipo debe ser: dish, beverage, dessert u other.',
+            'type.in'                    => 'El tipo debe ser: physical, service, digital, composite, other.',
 
             // images
             'images.array'               => 'Las imágenes deben enviarse como un arreglo.',

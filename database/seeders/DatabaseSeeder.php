@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CitySeeder::class,
             RolesAndPermissionsSeeder::class,
+            DefaultCategoriesSeeder::class,
         ]);
     }
 }

@@ -32,7 +32,10 @@ class CategoryRepository implements CategoryRepositoryExtendedInterface
         return Category::with(['company'])
             ->when(
                 $filters['company_id'] ?? null,
-                fn($q, $v) => $q->where('company_id', $v)
+                fn($q, $v) => $q->where(fn($inner) =>
+                    $inner->where('company_id', $v)
+                          ->orWhereNull('company_id')
+                )
             )
             ->when(
                 $filters['search'] ?? null,

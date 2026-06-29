@@ -53,7 +53,10 @@ class CategoryController extends Controller
     public function store(CreateCategoryRequest $request, CreateCategoryAction $action): JsonResponse
     {
         try {
-            $category = $action(CreateCategoryData::from($request));
+            $category = $action(CreateCategoryData::from([
+                ...$request->validated(),
+                'company_id' => $request->user()->company_id,
+            ]));
 
             return response()->json([
                 'success' => true,
@@ -121,10 +124,12 @@ class CategoryController extends Controller
         }
     }
 
-    // DELETE /category/{category}
-    public function destroy(
+    // PATCH /category/{category}/activate
+    public function changeStatus(
+        Request                  $request,
         string                   $categoryId,
-        DeactivateCategoryAction $action,
+        ActivateCategoryAction   $activateAction,
+        DeactivateCategoryAction $deactivateAction,
     ): JsonResponse {
         $category = $this->categoryRepository->findById($categoryId);
 
@@ -132,38 +137,26 @@ class CategoryController extends Controller
             return response()->json(['success' => false, 'error' => ['code' => 'CATEGORY_NOT_FOUND']], 404);
         }
 
-        try {
-            $action($category);
+        $action = $request->input('action');
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Categoria desactivada correctamente.',
-            ]);
-
-        } catch (\DomainException $e) {
+        if (! in_array($action, ['activate', 'deactivate'], true)) {
             return response()->json([
                 'success' => false,
-                'error'   => ['code' => 'DOMAIN_ERROR', 'message' => $e->getMessage()],
+                'error'   => ['code' => 'INVALID_ACTION', 'message' => 'La acción debe ser "activate" o "deactivate".'],
             ], 422);
         }
-    }
 
-    // POST /category/{category}/activate
-    public function activate(
-        string                 $categoryId,
-        ActivateCategoryAction $action,
-    ): JsonResponse {
-        $category = $this->categoryRepository->findById($categoryId);
-
-        if (! $category) {
-            return response()->json(['success' => false, 'error' => ['code' => 'CATEGORY_NOT_FOUND']], 404);
+        if ($action === 'activate') {
+            $activateAction($category);
+            $message = 'Categoria activada correctamente.';
+        } else {
+            $deactivateAction($category);
+            $message = 'Categoria desactivada correctamente.';
         }
-
-        $action($category);
 
         return response()->json([
             'success' => true,
-            'message' => 'Categoria activada correctamente.',
+            'message' => $message,
         ]);
     }
 

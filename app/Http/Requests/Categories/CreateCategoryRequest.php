@@ -9,10 +9,9 @@ class CreateCategoryRequest extends \App\Http\Requests\ApiFormRequest
 	public function rules(): array
 	{
 		return [
-			'company_id'    => ['nullable', 'uuid', 'exists:companies,id'],
 			'parent_id'     => ['nullable', 'uuid', 'exists:categories,id'],
 			'name'          => ['required', 'string', 'max:50'],
-			'slug'          => ['required'],
+			'slug'          => ['required', 'string', 'max:100', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
 			'description'   => ['required', 'string', 'max:500'],
 			'image_url'     => ['nullable', 'string', 'max:500'],
 		];
@@ -21,11 +20,14 @@ class CreateCategoryRequest extends \App\Http\Requests\ApiFormRequest
 	public function messages(): array
 	{
 		return [
-			'name.max'     			=> 'El maximo de caracteres es de 50.',
-			'description.max'  	=> 'El maximo de caracteres es de 500.',
-			'image_url.max' 		=> 'El maximo de caracteres es de 50.',
-			'slug.required'   	=> 'El campo es obligatorio.',
-			'company_id.exists' => 'La compañia no existe.',
+			'name.required'     => 'El nombre es obligatorio.',
+			'name.max'          => 'El nombre no puede superar los 50 caracteres.',
+			'description.max'   => 'La descripción no puede superar los 500 caracteres.',
+			'image_url.max'     => 'La URL de la imagen no puede superar los 500 caracteres.',
+			'slug.required'     => 'El slug es obligatorio.',
+			'slug.max'          => 'El slug no puede superar los 100 caracteres.',
+			'slug.regex'        => 'El slug solo puede contener letras minúsculas, números y guiones (ej: mi-categoria).',
+			'description.required' => 'La descripción es obligatoria.',
 			'parent_id.exists'  => 'La categoria padre no existe.',
 		];
 	}
